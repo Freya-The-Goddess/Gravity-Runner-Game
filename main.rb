@@ -22,11 +22,25 @@ class GravityRunner < (Gosu::Window)
             self.caption = "Gravity Runner"
             @show_instruct = true
             @font = Gosu::Font.new(20, name:"./media/courier-new-bold.ttf")
+
+            #load high score if it exists
+            if File.exists?(HIGHSCORE_FILENAME)
+                begin
+                    #read high score from file
+                    @high_score = Integer(File.read(HIGHSCORE_FILENAME))
+                rescue #error reading or converting to integer
+                    @high_score = 0
+                    write_highscore
+                end
+            else #file doesn't exist
+                @high_score = 0
+                write_highscore
+            end
         end
 
         @ticks = 0 #keeps track of total game ticks
-        @score = 0 #score
         @difficulty = DIFFICULTY_START
+        @score = 0 #score
 
         #first spawn events (after which randomisers take over)
         @next_obstacle = 20
@@ -55,6 +69,13 @@ class GravityRunner < (Gosu::Window)
                 return true
         else
             return false
+        end
+    end
+
+    #write highscore to file
+    def write_highscore
+        File.open(HIGHSCORE_FILENAME, "w") do |file| #write high score to file
+            file.write @high_score.to_s
         end
     end
 
@@ -150,6 +171,12 @@ class GravityRunner < (Gosu::Window)
                 hole.update(@ship.speed)
                 true if hole.off_screen? #remove holes that are off screen
             end
+
+        else #player dead
+            if @score.to_i > @high_score
+                @high_score = @score.to_i #update high score
+                write_highscore
+            end
         end
     end
 
@@ -158,7 +185,7 @@ class GravityRunner < (Gosu::Window)
         #DRAW BACKGROUND, SHIP AND UI
         @ui.draw_background(ZOrder::BACKGROUND, @ticks) #draw scrolling background
         @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity) #draw buttons for jump and flip
-        @ui.draw_score(ZOrder::UI, @score) #draw score
+        @ui.draw_score(ZOrder::UI, @score, @high_score) #draw score
         @ship.draw(ZOrder::SHIP) #draw spaceship
 
         #DRAW INSTRUCTIONS OVERLAYS OR DEATH SCREEN OVERLAY

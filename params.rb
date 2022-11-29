@@ -27,14 +27,16 @@ CEILING_Y           = 50        #y coord of ceiling (pixels)
 FLOOR_THICKNESS     = 15        #floor thickness (pixels)
 
 #Color parameters
-BACKGROUND_COLOR    = Gosu::Color.argb(0xFF_00000A)
-SCORE_TEXT_COLOR    = Gosu::Color::WHITE
+BACKGROUND_COLOR    = Gosu::Color.argb(0xFF_00000A) #Space (dark blue)
+SCORE_TEXT_COLOR    = Gosu::Color.argb(0xFF_FFFFFF) #White Text
+NEW_HIGHSCORE_COLOR = Gosu::Color.argb(0xFF_FF6666) #Light Red Text
 BLEND               = Gosu::Color.argb(0xFF_FFFFFF) #Gosu blend mode
 
 #Difficulty parameters
 DIFFICULTY_START    = 1.0       #initial difficulty value
 DIFFICULTY_INCREASE = 0.0001    #difficulty increase per tick
 SCORE_SCALER        = 0.005     #multiplied by ship speed to increase score per tick
+HIGHSCORE_FILENAME  = "highscore.txt"
 
 #Speed parameters
 BACKGROUND_SPEED    = 1.0       #background stars scrolling speed (pixels/tick)

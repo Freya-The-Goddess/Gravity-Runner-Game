@@ -57,9 +57,16 @@ class UI
         grav_button.draw_rot(SCREEN_WIDTH, SCREEN_HEIGHT, z_layer, 0, 1, 1, 1, 1)
     end
 
-    #draw score to screen
-    def draw_score(z_layer, score)
+    #draw score and high score to screen
+    def draw_score(z_layer, score, high_score)
+        #draw score
         @font.draw_text("Score: #{score.to_i.to_s}", 10, 5, z_layer, 1.0, 1.0, SCORE_TEXT_COLOR)
+        
+        #draw high score
+        text_color = SCORE_TEXT_COLOR
+        text_color = NEW_HIGHSCORE_COLOR if score.to_i > high_score #red text when high score beat
+
+        @font.draw_text("High Score: #{high_score.to_s}", SCREEN_WIDTH-145-(high_score.to_s.length*11), 5, z_layer, 1.0, 1.0, text_color)
     end
 
     #draw overlay based on specified index
