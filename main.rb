@@ -41,6 +41,7 @@ class GravityRunner < (Gosu::Window)
         @ticks = 0 #keeps track of total game ticks
         @difficulty = DIFFICULTY_START
         @score = 0 #score
+        @paused = false
 
         #first spawn events (after which randomisers take over)
         @next_obstacle = 20
@@ -94,20 +95,32 @@ class GravityRunner < (Gosu::Window)
     def button_down(id)
         case id
             when Gosu::KB_SPACE #jump
-                @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
+                @ui.jump_button_ticks = @player.jump(@ticks, @gravity) if !@paused
             when Gosu::KB_RETURN #flip gravity
-                flip_gravity if !@player.dead
+                flip_gravity if !@player.dead && !@paused
             when Gosu::KB_R #restart
                 initialize(true) if @player.dead
+            when Gosu::KB_ESCAPE #pause
+                if !@player.dead
+                    if @paused
+                        @paused = false
+                    else
+                        @paused = true
+                    end
+                end
 
             when Gosu::MsLeft
                 if @player.dead #click anywhere to restart
                     initialize(true)
+                elsif @paused #click anywhere to resume
+                    @paused = false
                 else
-                    if mouse_over_area?(0, SCREEN_HEIGHT-100, 150, SCREEN_HEIGHT) #jump button
+                    if mouse_over_area?(0, SCREEN_HEIGHT-120, 150, SCREEN_HEIGHT) #jump button
                         @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
-                    elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-100, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
+                    elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
                         flip_gravity
+                    elsif mouse_over_area?(SCREEN_WIDTH/2-50, SCREEN_HEIGHT-80, SCREEN_WIDTH/2+50, SCREEN_HEIGHT) #pause button
+                        @paused = true
                     end
                 end
         end
@@ -115,7 +128,7 @@ class GravityRunner < (Gosu::Window)
 
     #update game each frame (tick)
     def update
-        if !@player.dead
+        if !@player.dead && !@paused
             @ticks += 1 #increment ticks
             @difficulty += DIFFICULTY_INCREASE #increase difficulty
             @score += @ship.speed * SCORE_SCALER #increase score based on ship speed
@@ -171,8 +184,7 @@ class GravityRunner < (Gosu::Window)
                 hole.update(@ship.speed)
                 true if hole.off_screen? #remove holes that are off screen
             end
-
-        else #player dead
+        elsif @player.dead
             if @score.to_i > @high_score
                 @high_score = @score.to_i #update high score
                 write_highscore
@@ -184,15 +196,17 @@ class GravityRunner < (Gosu::Window)
     def draw
         #DRAW BACKGROUND, SHIP AND UI
         @ui.draw_background(ZOrder::BACKGROUND, @ticks) #draw scrolling background
-        @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity) #draw buttons for jump and flip
+        @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused) #draw buttons for jump and flip
         @ui.draw_score(ZOrder::UI, @score, @high_score) #draw score
         @ship.draw(ZOrder::SHIP) #draw spaceship
 
         #DRAW INSTRUCTIONS OVERLAYS OR DEATH SCREEN OVERLAY
-        if @show_instruct && !@player.dead #draw instructions on first game
+        if @show_instruct && !@player.dead && !@paused #draw instructions on first game
             @show_instruct = @ui.draw_instructions(ZOrder::OVERLAY, @ticks)
         elsif @player.dead #draw death screen overlay with restart instructions
             @ui.draw_overlay(ZOrder::OVERLAY, 2)
+        elsif @paused #pause screen overlay
+            @ui.draw_overlay(ZOrder::OVERLAY, 3)
         end
 
         #DRAW PLAYER, ENEMIES, OBSTACLES AND HOLES

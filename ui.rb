@@ -39,22 +39,24 @@ class UI
     end
 
     #draw jump and gravity flip buttons
-    def draw_buttons(z_layer, ticks, gravity)
-        jump_button = @buttons[0] #button unpressed
-        jump_button = @buttons[1] if @jump_button_ticks > ticks #button pressed
-        
+    def draw_buttons(z_layer, ticks, gravity, paused)
+        jump_button = @buttons[0] #jump button unpressed
+        jump_button = @buttons[1] if @jump_button_ticks > ticks #jump button pressed
+        pause_button = @buttons[6] #pause button unpressed
+        pause_button = @buttons[7] if paused #pause button pressed
         case gravity
             when Gravity::DOWN
-                grav_button = @buttons[2] #button unpressed
-                grav_button = @buttons[3] if @grav_button_ticks > ticks #button pressed
+                grav_button = @buttons[2] #gravity button unpressed
+                grav_button = @buttons[3] if @grav_button_ticks > ticks #gravity button pressed
             when Gravity::UP
-                grav_button = @buttons[4] #button unpressed
-                grav_button = @buttons[5] if @grav_button_ticks > ticks #button pressed
+                grav_button = @buttons[4] #gravity button unpressed
+                grav_button = @buttons[5] if @grav_button_ticks > ticks #gravity button pressed
         end
 
         #draw buttons to screen
-        jump_button.draw_rot(0,            SCREEN_HEIGHT, z_layer, 0, 0, 1, 1, 1)
-        grav_button.draw_rot(SCREEN_WIDTH, SCREEN_HEIGHT, z_layer, 0, 1, 1, 1, 1)
+        jump_button.draw_rot(0,               SCREEN_HEIGHT, z_layer, 0, 0,   1, 1, 1)
+        pause_button.draw_rot(SCREEN_WIDTH/2, SCREEN_HEIGHT, z_layer, 0, 0.5, 1, 1, 1)
+        grav_button.draw_rot(SCREEN_WIDTH,    SCREEN_HEIGHT, z_layer, 0, 1,   1, 1, 1)
     end
 
     #draw score and high score to screen
