@@ -16,13 +16,14 @@ require_relative 'hole'
 
 #GravityRunner game class (inherits Gosu window)
 class GravityRunner < (Gosu::Window)
-    def initialize(restart = false)
-        if !restart
-            super(SCREEN_WIDTH, SCREEN_HEIGHT)
-            self.caption = "Gravity Runner"
-            @show_instruct = true
-            @font = Gosu::Font.new(20, name:"./media/courier-new-bold.ttf")
+    def initialize()
+        super(SCREEN_WIDTH, SCREEN_HEIGHT) #call parent init to create game window
+        self.caption = "Gravity Runner"
+        new_game(false) #start new game
+    end
 
+    def new_game(restart)
+        if !restart #first game
             #load high score if it exists
             if File.exists?(HIGHSCORE_FILENAME)
                 begin
@@ -36,6 +37,9 @@ class GravityRunner < (Gosu::Window)
                 @high_score = 0
                 write_highscore
             end
+
+            @font = Gosu::Font.new(20, name:"./media/courier-new-bold.ttf")
+            @show_instruct = true #show instructions first game
         end
 
         @ticks = 0 #keeps track of total game ticks
@@ -99,7 +103,7 @@ class GravityRunner < (Gosu::Window)
             when Gosu::KB_RETURN #flip gravity
                 flip_gravity if !@player.dead && !@paused
             when Gosu::KB_R #restart
-                initialize(true) if @player.dead
+                new_game(true) if @player.dead
             when Gosu::KB_ESCAPE #pause
                 if !@player.dead
                     if @paused
@@ -111,7 +115,7 @@ class GravityRunner < (Gosu::Window)
 
             when Gosu::MsLeft
                 if @player.dead #click anywhere to restart
-                    initialize(true)
+                    new_game(true)
                 elsif @paused #click anywhere to resume
                     @paused = false
                 else
