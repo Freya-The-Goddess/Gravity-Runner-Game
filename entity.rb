@@ -87,7 +87,7 @@ end
 #LiveEntity parent class (inherited by Player and Enemy)
 class LiveEntity < Entity
     #public attributes
-    attr_accessor :x_coord, :y_coord, :height, :width
+    attr_accessor :x_coord, :y_coord, :height, :width, :dead
 
     def initialize(x_coord, y_coord, x_vel, tile_size, width, tiles)
         @angle, @frame = 0, 0
