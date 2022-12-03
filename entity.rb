@@ -14,14 +14,10 @@ class Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width
 
-    def initialize(x_coord, y_coord, x_vel, tile_size, width, tiles)
-        @x_coord = x_coord.to_f
-        @y_coord = y_coord.to_f
-        @x_vel = x_vel
-        @y_vel = 0.0
-        @height = tile_size
-        @width = width
-        @tiles = tiles
+    def initialize(x_coord, y_coord, x_vel, tile_size, width)
+        @x_coord, @y_coord = x_coord.to_f, y_coord.to_f
+        @x_vel, @y_vel = x_vel, 0.0
+        @height, @width = tile_size, width
     end
 
     #check if entity is outside window
@@ -82,6 +78,13 @@ class Entity
     #abstract methods to be overriden by children
     abstract_method :update
     abstract_method :draw
+
+    #singleton object
+    class << self
+        #class instance variable tiles
+        public attr_reader :tiles
+        private attr_writer :tiles
+    end
 end
 
 #LiveEntity parent class (inherited by Player and Enemy)
@@ -89,12 +92,10 @@ class LiveEntity < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :dead
 
-    def initialize(x_coord, y_coord, x_vel, tile_size, width, tiles)
+    def initialize(x_coord, y_coord, x_vel, tile_size, width)
         @angle, @frame = 0, 0
-        @standing = true
-        @flipping = false
-        @dead = false
-        super(x_coord, y_coord, x_vel, tile_size, width, tiles)
+        @standing, @flipping, @dead = true, false, false
+        super(x_coord, y_coord, x_vel, tile_size, width)
     end
 
     #cycle through entity's running frames
@@ -156,7 +157,7 @@ class LiveEntity < Entity
         end
         
         #draw entity tile
-        @tiles[frame].draw_rot(@x_coord, @y_coord, z_layer, @angle, 0.5, 0.5, x_flip, 1)
+        self.class.tiles[frame].draw_rot(@x_coord, @y_coord, z_layer, @angle, 0.5, 0.5, x_flip, 1)
     end
 
     #abstract methods to be overriden by children

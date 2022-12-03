@@ -14,11 +14,11 @@ class Player < LiveEntity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :dead
 
-    def initialize(y_coord, tile_size, width)
-        x_coord = 120
-        x_vel = 0
-        tiles = Gosu::Image.load_tiles("media/player.png", tile_size, tile_size)
-        super(x_coord, y_coord, x_vel, tile_size, width, tiles)
+    #player sprites array (class instance variable)
+    @tiles = Gosu::Image.load_tiles(PLAYER_TILES_PATH, PLAYER_SIZE, PLAYER_SIZE)
+
+    def initialize
+        super(120, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
     end
 
     #player jump input

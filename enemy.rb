@@ -14,10 +14,12 @@ class Enemy < LiveEntity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width
 
+    #enemy sprites array (class instance variable)
+    @tiles = Gosu::Image.load_tiles(ENEMY_TILES_PATH, ENEMY_SIZE, ENEMY_SIZE)
+
     def initialize(x_coord, y_coord, x_vel, tile_size, width, gravity)
         @gravity = gravity
-        tiles = Gosu::Image.load_tiles("media/robot.png", tile_size, tile_size)
-        super(x_coord, y_coord, x_vel, tile_size, width, tiles)
+        super(x_coord, y_coord, x_vel, tile_size, width)
     end
     
     #update enemy each frame
@@ -34,8 +36,8 @@ class Enemy < LiveEntity
     def draw(z_layer)
         super(z_layer, @gravity)
     end
-    
-    #singleton class
+
+    #singleton object
     class << self
         #create new enemy with randomized traits
         def summon(difficulty)

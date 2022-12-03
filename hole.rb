@@ -13,13 +13,13 @@ require_relative 'entity'
 class Hole < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :direction
+
+    #hole sprite (class instance variable)
+    @tiles = Gosu::Image.load_tiles(HOLE_TILES_PATH, HOLE_WIDTH, HOLE_HEIGHT)
     
     def initialize(x_coord, y_coord, direction)
         @direction = direction
-        x_vel = 0
-        width, height = 150, 20
-        tiles = Gosu::Image.load_tiles("media/hole.png", 170, 20)
-        super(x_coord, y_coord, x_vel, height, width, tiles)
+        super(x_coord, y_coord, 0, HOLE_HEIGHT, HOLE_COLLIDE_WIDTH)
     end
 
     #override collision function for holes
@@ -46,10 +46,10 @@ class Hole < Entity
         elsif @direction == :floor
             tile = 0
         end
-        @tiles[tile].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
+        self.class.tiles[tile].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
     end
 
-    #singleton class
+    #singleton object
     class << self
         #create new obstacle with randomized type
         def summon(direction = nil)

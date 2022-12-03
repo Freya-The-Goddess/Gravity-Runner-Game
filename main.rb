@@ -25,10 +25,10 @@ class GravityRunner < (Gosu::Window)
     def new_game(restart)
         if !restart #first game
             #load high score if it exists
-            if File.exists?(HIGHSCORE_FILENAME)
+            if File.exists?(HIGHSCORE_PATH)
                 begin
                     #read high score from file
-                    @high_score = Integer(File.read(HIGHSCORE_FILENAME))
+                    @high_score = Integer(File.read(HIGHSCORE_PATH))
                 rescue #error reading or converting to integer
                     @high_score = 0
                     write_highscore
@@ -37,8 +37,6 @@ class GravityRunner < (Gosu::Window)
                 @high_score = 0
                 write_highscore
             end
-
-            @font = Gosu::Font.new(20, name:"./media/courier-new-bold.ttf")
             @show_instruct = true #show instructions first game
         end
 
@@ -54,9 +52,9 @@ class GravityRunner < (Gosu::Window)
 
         @gravity = Gravity::DOWN #default gravity down
 
-        @player = Player.new(FLOOR_Y-PLAYER_SIZE/2, PLAYER_SIZE, PLAYER_WIDTH) #create player instance
-        @ship = Ship.new() #create ship instance
-        @ui = UI.new(@font) #create UI instance (background, buttons and overlays)
+        @player = Player.new #create player instance
+        @ship = Ship.new #create ship instance
+        @ui = UI.new #create UI instance (background, buttons and overlays)
         
         @enemies = []
         @obstacles = []
@@ -79,7 +77,7 @@ class GravityRunner < (Gosu::Window)
 
     #write highscore to file
     def write_highscore
-        File.open(HIGHSCORE_FILENAME, "w") do |file| #write high score to file
+        File.open(HIGHSCORE_PATH, "w") do |file| #write high score to file
             file.write @high_score.to_s
         end
     end
