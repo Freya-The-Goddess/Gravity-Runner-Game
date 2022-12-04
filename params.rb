@@ -24,8 +24,8 @@ NEW_HIGHSCORE_COLOR = Gosu::Color.argb(0xFF_FF6666)     #Light Red Text
 BLEND               = Gosu::Color.argb(0xFF_FFFFFF)     #Gosu blend mode
 
 #Game file paths
-HIGHSCORE_PATH      = "highscore.txt"                   #highscore text file path
 FONT_PATH           = "./media/courier-new-bold.ttf"    #courier new bold font path
+HIGHSCORE_PATH      = "media/highscore.txt"             #highscore text file path
 PLAYER_TILES_PATH   = "media/player.png"                #player sprites file path
 ENEMY_TILES_PATH    = "media/robot.png"                 #enemy sprites file path
 OBSTACLE_TILES_PATH = "media/crates.png"                #obstacle sprites file path
