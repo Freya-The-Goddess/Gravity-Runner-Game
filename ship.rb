@@ -1,5 +1,6 @@
 #Gravity Runner game by Freya-The-Goddess
-#Custom code project for Intro To Programming (COS10009)
+#Custom code project for Intro To Programming (COS10009) in 2020
+#Code refactored and modified in 2022
 
 #import external libraries
 require 'rubygems'
