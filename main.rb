@@ -53,8 +53,7 @@ class GravityRunner < (Gosu::Window)
         @gravity = Gravity::DOWN #default gravity down
 
         @player = Player.new #create player instance
-        @ship = Ship.new #create ship instance
-        @ui = UI.new #create UI instance (background, buttons and overlays)
+        @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
         
         @enemies = []
         @obstacles = []
@@ -133,8 +132,8 @@ class GravityRunner < (Gosu::Window)
         if !@player.dead && !@paused
             @ticks += 1 #increment ticks
             @difficulty += DIFFICULTY_INCREASE #increase difficulty
-            @score += @ship.speed * SCORE_SCALER #increase score based on ship speed
-            @ship.move #move ship horizontally
+            @score += @ui.ship.speed * SCORE_SCALER #increase score based on ship speed
+            @ui.ship.move #move ship horizontally
 
             #SUMMON NEW ENEMIES, OBSTACLES AND HOLES
             if @next_spawn <= @ticks ##summon enemy(s) when next spawn ticks reached
@@ -171,19 +170,19 @@ class GravityRunner < (Gosu::Window)
             @player.update(@gravity, @ticks, @holes) #update player position and state each frame
 
             @enemies.delete_if do |enemy| #update enemies each frame
-                enemy.update(@ticks, @holes, @ship.speed) #update enemy position and state
+                enemy.update(@ticks, @holes, @ui.ship.speed) #update enemy position and state
                 @player.dead = true if enemy.collision?(@player) #check enemy collision with player
                 true if enemy.off_screen? #remove enemies that are off screen
             end
 
             @obstacles.delete_if do |obstacle| #update obstacles each frame
-                obstacle.update(@gravity, @holes, @ship.speed) #update obstacle position and state
+                obstacle.update(@gravity, @holes, @ui.ship.speed) #update obstacle position and state
                 @player.dead = true if obstacle.collision?(@player) #check obstacle collision with player
                 true if obstacle.off_screen? #remove obstacles that are off screen
             end
 
             @holes.delete_if do |hole| #update holes each frame
-                hole.update(@ship.speed)
+                hole.update(@ui.ship.speed)
                 true if hole.off_screen? #remove holes that are off screen
             end
         elsif @player.dead
@@ -200,7 +199,7 @@ class GravityRunner < (Gosu::Window)
         @ui.draw_background(ZOrder::BACKGROUND, @ticks) #draw scrolling background
         @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused) #draw buttons for jump and flip
         @ui.draw_score(ZOrder::UI, @score, @high_score) #draw score
-        @ship.draw(ZOrder::SHIP) #draw spaceship
+        @ui.ship.draw(ZOrder::SHIP) #draw spaceship
 
         #DRAW INSTRUCTIONS OVERLAYS OR DEATH SCREEN OVERLAY
         if @show_instruct && !@player.dead && !@paused #draw instructions on first game

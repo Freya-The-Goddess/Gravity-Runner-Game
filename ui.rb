@@ -11,10 +11,11 @@ require_relative 'params'
 #user interface class for drawing background, buttons, overlays and score
 class UI
     #public attributes
-    attr_accessor :jump_button_ticks, :grav_button_ticks
+    attr_accessor :jump_button_ticks, :grav_button_ticks, :ship
 
     def initialize
         @jump_button_ticks, @grav_button_ticks = 0, 0
+        @ship = Ship.new #create ship instance
     end
 
     #draw background color and two layers of scrolling stars 
