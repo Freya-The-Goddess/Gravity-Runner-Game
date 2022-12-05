@@ -50,8 +50,14 @@ class Hole < Entity
         self.class.tiles[tile].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
     end
 
+    #spawn ticks randomizer (class instance variable)
+    @rng = RandNormDist.new(HOLE_SPAWN_BASE, HOLE_SPAWN_SD)
+
     #singleton object
     class << self
+        attr_accessor :next_spawn
+        private attr_accessor :rng
+
         #create new obstacle with randomized type
         def summon(direction = nil)
             direction = [:floor,:ceiling][rand(0..1)] if direction.nil?
@@ -61,6 +67,12 @@ class Hole < Entity
                 y_coord = FLOOR_Y+10
             end
             return Hole.new(SCREEN_WIDTH+170, y_coord, direction)
+        end
+
+        #calculate ticks for next spawn event based on normal distribution
+        def calc_next_spawn(ticks, difficulty)
+            rng.mean = HOLE_SPAWN_BASE / ((difficulty - 1) * HOLE_SPAWN_MULT + 1) #update mean of normal distribution
+            @next_spawn = ticks + rng.rand_ticks #generate next spawn tick value
         end
     end
 end

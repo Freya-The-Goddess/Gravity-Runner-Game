@@ -46,10 +46,10 @@ class GravityRunner < (Gosu::Window)
         @score = 0 #score
         @paused = false
 
-        #first spawn events (after which randomisers take over)
-        @next_obstacle = 20
-        @next_hole = 200
-        @next_spawn = 600
+        #first spawn events (after which randomizer takes over)
+        Enemy.next_spawn = FIRST_ENEMY
+        Obstacle.next_spawn = FIRST_OBSTACLE
+        Hole.next_spawn = FIRST_HOLE
 
         @gravity = Gravity::DOWN #default gravity down
 
@@ -137,34 +137,24 @@ class GravityRunner < (Gosu::Window)
             @ui.ship.move #move ship horizontally
 
             #SUMMON NEW ENEMIES, OBSTACLES AND HOLES
-            if @next_spawn <= @ticks ##summon enemy(s) when next spawn ticks reached
-                @enemies << Enemy.summon(@difficulty) #spawn enemy with randomised attributes 
+            if Enemy.next_spawn <= @ticks ##summon enemy(s) when next spawn ticks reached
+                @enemies << Enemy.summon(@difficulty) #create new enemy
                 @enemies << Enemy.summon(@difficulty) if rand(0..(50 / @difficulty).to_i) == 0 #chance for 2nd enemy to spawn
-                @enemies << Enemy.summon(@difficulty) if rand(0..(100 / @difficulty).to_i) == 0 #chance for 3rd enemy to spawn
-
-                min = (ENEMY_SPAWN_MIN / @difficulty).to_i
-                max = (min + (ENEMY_SPAWN_MAX - ENEMY_SPAWN_MIN) / @difficulty).to_i
-                @next_spawn = @ticks + rand(min..max) #randomised amount of ticks before next spawn event
+                Enemy.calc_next_spawn(@ticks, @difficulty) #calculate random ticks before next spawn event
             end
 
-            if @next_obstacle <= @ticks #summon obstacle when next spawn ticks reached
-                @obstacles << Obstacle.summon(@gravity) #create new obstacle with randomized type
-                
-                min = (OBSTACLE_SPAWN_MIN / @difficulty).to_i
-                max = (min + (OBSTACLE_SPAWN_MAX - OBSTACLE_SPAWN_MIN) / @difficulty).to_i
-                @next_obstacle = @ticks + rand(min..max) #randomised amount of ticks before next spawn event
+            if Obstacle.next_spawn <= @ticks #summon obstacle when next spawn ticks reached
+                @obstacles << Obstacle.summon(@gravity) #create new obstacle
+                Obstacle.calc_next_spawn(@ticks, @difficulty) #calculate random ticks before next spawn event
             end
 
-            if @next_hole <= @ticks #summon hole when next spawn ticks reached
-                if @next_hole == 200 #first hole always on floor
-                    @holes << Hole.summon(:floor)
-                else #all other holes random direction
-                    @holes << Hole.summon
+            if Hole.next_spawn <= @ticks #summon hole when next spawn ticks reached
+                if Hole.next_spawn == FIRST_HOLE 
+                    @holes << Hole.summon(:floor) #create first hole on floor
+                else 
+                    @holes << Hole.summon #create hole with random direction
                 end
-
-                min = (HOLE_SPAWN_MIN / @difficulty).to_i
-                max = (min + (HOLE_SPAWN_MAX - HOLE_SPAWN_MIN) / @difficulty).to_i
-                @next_hole = @ticks + rand(min..max) #randomised amount of ticks before next spawn event
+                Hole.calc_next_spawn(@ticks, @difficulty) #calculate random ticks before next spawn event
             end
 
             #UPDATE PLAYER, ENEMIES, OBSTACLES AND HOLES
@@ -197,16 +187,18 @@ class GravityRunner < (Gosu::Window)
     #draw frame to game window each tick
     def draw
         #DRAW BACKGROUND, SHIP AND UI
-        @ui.draw_background(ZOrder::BACKGROUND, @ticks) #draw scrolling background
-        @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused) #draw buttons for jump and flip
-        @ui.draw_score(ZOrder::UI, @score, @high_score) #draw score
-        @ui.ship.draw(ZOrder::SHIP) #draw spaceship
+        @ui.draw_background(ZOrder::BACKGROUND, @ticks)
+        @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused)
+        @ui.draw_score(ZOrder::UI, @score, @high_score)
+        @ui.ship.draw(ZOrder::SHIP)
 
         #DRAW INSTRUCTIONS OVERLAYS OR DEATH SCREEN OVERLAY
         if @show_instruct && !@player.dead && !@paused #draw instructions on first game
             @show_instruct = @ui.draw_instructions(ZOrder::OVERLAY, @ticks)
+        
         elsif @player.dead #draw death screen overlay with restart instructions
             @ui.draw_overlay(ZOrder::OVERLAY, 2)
+        
         elsif @paused #pause screen overlay
             @ui.draw_overlay(ZOrder::OVERLAY, 3)
         end

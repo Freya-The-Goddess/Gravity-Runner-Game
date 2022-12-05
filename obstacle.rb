@@ -35,8 +35,14 @@ class Obstacle < Entity
         self.class.tiles[@type].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
     end
 
+    #spawn ticks randomizer (class instance variable)
+    @rng = RandNormDist.new(OBSTACLE_SPAWN_BASE, OBSTACLE_SPAWN_SD)
+
     #singleton object
     class << self
+        attr_accessor :next_spawn
+        private attr_accessor :rng
+
         #create new obstacle with randomized type
         def summon(gravity)
             if gravity == Gravity::UP
@@ -46,6 +52,12 @@ class Obstacle < Entity
             end
             type = rand(0..3) #select random obstacle sprite
             return Obstacle.new(SCREEN_WIDTH+OBSTACLE_SIZE, y_coord, OBSTACLE_SIZE, type)
+        end
+
+        #calculate ticks for next spawn event based on normal distribution
+        def calc_next_spawn(ticks, difficulty)
+            rng.mean = OBSTACLE_SPAWN_BASE / ((difficulty - 1) * OBSTACLE_SPAWN_MULT + 1) #update mean of normal distribution
+            @next_spawn = ticks + rng.rand_ticks #generate next spawn tick value
         end
     end
 end

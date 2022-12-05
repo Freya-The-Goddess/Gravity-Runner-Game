@@ -9,6 +9,7 @@ require 'gosu'
 #import other files
 require_relative 'params'
 require_relative 'entity'
+require_relative 'randnormdist'
 
 #Enemy class (inherits LiveEntity)
 class Enemy < LiveEntity
@@ -38,11 +39,17 @@ class Enemy < LiveEntity
         super(z_layer, @gravity)
     end
 
+    #spawn ticks randomizer (class instance variable)
+    @rng = RandNormDist.new(ENEMY_SPAWN_BASE, ENEMY_SPAWN_SD)
+
     #singleton object
     class << self
+        attr_accessor :next_spawn
+        private attr_accessor :rng
+
         #create new enemy with randomized traits
         def summon(difficulty)
-            speed = rand(0.5..1.5) + difficulty/10
+            speed = rand(0.5..1.2) + difficulty/10
             gravity = [Gravity::UP, Gravity::DOWN][rand(0..1)]
             if gravity == Gravity::UP
                 y_coord = CEILING_Y+ENEMY_SIZE/2
@@ -50,6 +57,12 @@ class Enemy < LiveEntity
                 y_coord = FLOOR_Y-ENEMY_SIZE/2
             end
             return Enemy.new(SCREEN_WIDTH+ENEMY_SIZE, y_coord, speed, ENEMY_SIZE, ENEMY_WIDTH, gravity)
+        end
+
+        #calculate ticks for next spawn event based on normal distribution
+        def calc_next_spawn(ticks, difficulty)
+            rng.mean = ENEMY_SPAWN_BASE / ((difficulty - 1) * ENEMY_SPAWN_MULT + 1) #update mean of normal distribution
+            @next_spawn = ticks + rng.rand_ticks #generate next spawn tick value
         end
     end
 end
