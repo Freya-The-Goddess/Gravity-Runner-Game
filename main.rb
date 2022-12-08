@@ -39,6 +39,9 @@ class GravityRunner < (Gosu::Window)
                 write_highscore
             end
             @show_instruct = true #show instructions first game
+
+            @player = Player.new #create player instance
+            @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
         end
 
         @ticks = 0 #keeps track of total game ticks
@@ -53,9 +56,9 @@ class GravityRunner < (Gosu::Window)
 
         @gravity = Gravity::DOWN #default gravity down
 
-        @player = Player.new #create player instance
-        @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
-        
+        @player.reset #reset player to starting values
+        @ui.reset #reset ui to starting values
+
         @enemies = []
         @obstacles = []
         @holes = []

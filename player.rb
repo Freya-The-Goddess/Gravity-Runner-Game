@@ -22,6 +22,13 @@ class Player < LiveEntity
         super(120, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
     end
 
+    #reset player to starting values
+    def reset
+        @y_coord = FLOOR_Y-PLAYER_SIZE/2
+        @angle, @frame = 0, 0
+        @standing, @flipping, @dead = true, false, false
+    end
+
     #player jump input
     def jump(ticks, gravity)
         if @standing && !@dead

@@ -14,6 +14,11 @@ class Ship
     attr_accessor :speed
 
     def initialize
+        reset
+    end
+
+    #reset ship to starting values
+    def reset
         @speed = SHIP_START_SPEED #starting speed
         @x_shift = 0.0 #stores pixels to shift ship image for current frame
     end

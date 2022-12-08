@@ -19,6 +19,12 @@ class UI
         @ship = Ship.new #create ship instance
     end
 
+    #reset ui to starting values
+    def reset
+        @jump_button_ticks, @grav_button_ticks = 0, 0
+        @ship.reset #reset ship to starting values
+    end
+
     #draw background color and two layers of scrolling stars 
     def draw_background(z_layer, ticks)
         #background color
