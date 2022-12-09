@@ -25,7 +25,7 @@ class Player < LiveEntity
     #reset player to starting values
     def reset
         @y_coord = FLOOR_Y-PLAYER_SIZE/2
-        @angle, @frame = 0, 0
+        @y_vel, @angle, @frame = 0, 0, 0
         @standing, @flipping, @dead = true, false, false
     end
 
