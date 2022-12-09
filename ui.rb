@@ -25,6 +25,30 @@ class UI
         @ship.reset #reset ship to starting values
     end
 
+    #read highscore from file if it exists else create the file
+    def read_highscore
+        if File.exists?(HIGHSCORE_PATH)
+            begin
+                #read high score from file
+                highscore = Integer(File.read(HIGHSCORE_PATH))
+            rescue #error reading or converting to integer
+                highscore = 0
+                write_highscore(highscore)
+            end
+        else #file doesn't exist
+            highscore = 0
+            write_highscore(highscore)
+        end
+        return highscore
+    end
+
+    #write highscore to file
+    def write_highscore(highscore)
+        File.open(HIGHSCORE_PATH, "w") do |file| #write high score to file
+            file.write highscore.to_s
+        end
+    end
+
     #draw background color and two layers of scrolling stars 
     def draw_background(z_layer, ticks)
         #background color
