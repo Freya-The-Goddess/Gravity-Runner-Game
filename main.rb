@@ -18,7 +18,7 @@ require_relative 'hole'
 #GravityRunner game class (inherits Gosu window)
 class GravityRunner < (Gosu::Window)
     def initialize()
-        super(SCREEN_WIDTH, SCREEN_HEIGHT) #call parent init to create game window
+        super(SCREEN_WIDTH, SCREEN_HEIGHT, false, UPDATE_INTERVAL) #call parent init to create game window
         self.caption = "Gravity Runner"
         new_game(false) #start new game
     end

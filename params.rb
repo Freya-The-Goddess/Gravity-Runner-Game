@@ -24,7 +24,7 @@ SCORE_TEXT_COLOR    = Gosu::Color.argb(0xFF_FFFFFF)     #White Text
 NEW_HIGHSCORE_COLOR = Gosu::Color.argb(0xFF_FF6666)     #Light Red Text
 BLEND               = Gosu::Color.argb(0xFF_FFFFFF)     #Gosu blend mode
 
-#Game file paths
+#Game media file paths
 FONT_PATH           = "./media/courier-new-bold.ttf"    #courier new bold font path
 HIGHSCORE_PATH      = "media/highscore.txt"             #highscore text file path
 PLAYER_TILES_PATH   = "media/player.png"                #player sprites file path
@@ -38,9 +38,13 @@ OVERLAY_TILES_PATH  = "media/overlay.png"               #overlay tiles file path
 JUMP_SOUND_PATH     = "media/jump.mp3"                  #jump sound effect file path
 GRAV_SOUND_PATH     = "media/flip-gravity.mp3"          #gravity flip sound effect file path
 
-#Screen size constants
+#Screen size parameters
 SCREEN_WIDTH        = 800                               #game window width (pixels)
 SCREEN_HEIGHT       = 450                               #game window height (pixels)
+
+#Frame rate parameters
+FRAME_RATE          = 60                                #frames per second
+UPDATE_INTERVAL     = 1.0 / FRAME_RATE * 1000           #ms interval between frames
 
 #Ship parameters
 FLOOR_Y             = 300                               #y coord of floor (pixels)
