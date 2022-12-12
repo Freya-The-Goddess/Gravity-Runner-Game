@@ -115,6 +115,16 @@ class UI
         return true
     end
 
+    #play jump sound effect
+    def play_jump_sound
+        self.class.jump_sound.play
+    end
+
+    #play gravity flip sound effect
+    def play_grav_sound
+        self.class.grav_sound.play
+    end
+
     #Gosu font (class instance variable)
     @font = Gosu::Font.new(20, name:FONT_PATH)
 
@@ -122,10 +132,14 @@ class UI
     @space = Gosu::Image.new(SPACE_IMAGE_PATH)
     @buttons = Gosu::Image.load_tiles(BUTTON_TILES_PATH, BUTTON_SIZE, BUTTON_SIZE)
     @overlays = Gosu::Image.load_tiles(OVERLAY_TILES_PATH, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    #sound effects (class instance variable)
+    @jump_sound = Gosu::Sample.new(JUMP_SOUND_PATH)
+    @grav_sound = Gosu::Sample.new(GRAV_SOUND_PATH)
     
     #singleton object
     class << self
-        public attr_reader :font, :space, :buttons, :overlays
-        private attr_writer :font, :space, :buttons, :overlays
+        public attr_reader :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
+        private attr_writer :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
     end
 end

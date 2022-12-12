@@ -80,10 +80,17 @@ class GravityRunner < (Gosu::Window)
     #handle input events
     def button_down(id)
         case id
+            #keyboard inputs
             when Gosu::KB_SPACE #jump
-                @ui.jump_button_ticks = @player.jump(@ticks, @gravity) if !@paused
+                if !@paused && !@player.dead && @player.standing
+                    @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
+                    @ui.play_jump_sound
+                end
             when Gosu::KB_RETURN #flip gravity
-                flip_gravity if !@player.dead && !@paused
+                if !@paused && !@player.dead
+                    flip_gravity 
+                    @ui.play_grav_sound
+                end
             when Gosu::KB_R #restart
                 new_game(true) if @player.dead
             when Gosu::KB_ESCAPE #pause
@@ -95,6 +102,7 @@ class GravityRunner < (Gosu::Window)
                     end
                 end
 
+            #mouse / touchscreen inputs
             when Gosu::MsLeft
                 if @player.dead #click anywhere to restart
                     new_game(true)
@@ -102,9 +110,13 @@ class GravityRunner < (Gosu::Window)
                     @paused = false
                 else
                     if mouse_over_area?(0, SCREEN_HEIGHT-120, 150, SCREEN_HEIGHT) #jump button
-                        @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
+                        if @player.standing
+                            @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
+                            @ui.play_jump_sound
+                        end
                     elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
                         flip_gravity
+                        @ui.play_grav_sound
                     elsif mouse_over_area?(SCREEN_WIDTH/2-50, SCREEN_HEIGHT-80, SCREEN_WIDTH/2+50, SCREEN_HEIGHT) #pause button
                         @paused = true
                     end

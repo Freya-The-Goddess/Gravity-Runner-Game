@@ -13,7 +13,7 @@ require_relative 'entity'
 #Player class (inherits LiveEntity)
 class Player < LiveEntity
     #public attributes
-    attr_accessor :x_coord, :y_coord, :height, :width, :dead
+    attr_accessor :x_coord, :y_coord, :height, :width, :dead, :standing
 
     #player sprites array (class instance variable)
     @tiles = Gosu::Image.load_tiles(PLAYER_TILES_PATH, PLAYER_SIZE, PLAYER_SIZE)
@@ -31,11 +31,8 @@ class Player < LiveEntity
 
     #player jump input
     def jump(ticks, gravity)
-        if @standing && !@dead
-            @y_vel = JUMP_CONSTANT * gravity #multiply by 1 or -1 depending on if player is jumping off FLOOR_Y or CEILING_Y
-            return ticks + BUTTON_PRESS_TICKS #jump button ticks
-        end
-        return 0
+        @y_vel = JUMP_CONSTANT * gravity #multiply by 1 or -1 depending on if player is jumping off floor or ceiling
+        return ticks + BUTTON_PRESS_TICKS #jump button ticks
     end
 
     #update player each frame
