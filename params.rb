@@ -37,6 +37,7 @@ BUTTON_TILES_PATH   = "media/buttons.png"               #button tiles file path
 OVERLAY_TILES_PATH  = "media/overlay.png"               #overlay tiles file path
 JUMP_SOUND_PATH     = "media/jump.mp3"                  #jump sound effect file path
 GRAV_SOUND_PATH     = "media/flip-gravity.mp3"          #gravity flip sound effect file path
+STEPS_SOUND_PATH    = "media/player-footsteps.mp3"      #gravity flip sound effect file path
 
 #Screen size parameters
 SCREEN_WIDTH        = 800                               #game window width (pixels)

@@ -155,6 +155,11 @@ class GravityRunner < (Gosu::Window)
 
             #UPDATE PLAYER, ENEMIES, OBSTACLES AND HOLES
             @player.update(@gravity, @ticks, @holes) #update player position and state each frame
+            if @player.standing
+                @ui.play_footsteps_sound
+            else
+                @ui.pause_footsteps_sound
+            end
 
             @enemies.delete_if do |enemy| #update enemies each frame
                 enemy.update(@ticks, @holes, @ui.ship.speed) #update enemy position and state
@@ -173,10 +178,13 @@ class GravityRunner < (Gosu::Window)
                 true if hole.off_screen? #remove holes that are off screen
             end
         elsif @player.dead
+            @ui.pause_footsteps_sound
             if @score.to_i > @highscore
                 @highscore = @score.to_i #update high score
                 @ui.write_highscore(@highscore)
             end
+        elsif @paused
+            @ui.pause_footsteps_sound
         end
     end
 

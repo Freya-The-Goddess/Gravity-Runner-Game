@@ -17,6 +17,8 @@ class UI
     def initialize
         @jump_button_ticks, @grav_button_ticks = 0, 0
         @ship = Ship.new #create ship instance
+        self.class.footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
+        self.class.footsteps_channel.pause
     end
 
     #reset ui to starting values
@@ -125,6 +127,20 @@ class UI
         self.class.grav_sound.play
     end
 
+    #play footsteps looping sound effect
+    def play_footsteps_sound
+        if !self.class.footsteps_channel.playing?
+            self.class.footsteps_channel.resume
+        end
+    end
+
+    #pause footsteps sound effect
+    def pause_footsteps_sound
+        if self.class.footsteps_channel.playing?
+            self.class.footsteps_channel.pause
+        end
+    end
+
     #Gosu font (class instance variable)
     @font = Gosu::Font.new(20, name:FONT_PATH)
 
@@ -136,10 +152,13 @@ class UI
     #sound effects (class instance variable)
     @jump_sound = Gosu::Sample.new(JUMP_SOUND_PATH)
     @grav_sound = Gosu::Sample.new(GRAV_SOUND_PATH)
+    @footsteps_sound = Gosu::Sample.new(STEPS_SOUND_PATH)
+    @footsteps_channel = nil
     
     #singleton object
     class << self
-        public attr_reader :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
-        private attr_writer :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
+        public attr_accessor :footsteps_channel
+        public attr_reader :font, :space, :buttons, :overlays, :jump_sound, :grav_sound, :footsteps_sound
+        private attr_writer :font, :space, :buttons, :overlays, :jump_sound, :grav_sound, :footsteps_sound
     end
 end
