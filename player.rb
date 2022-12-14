@@ -34,11 +34,11 @@ class Player < LiveEntity
 
     #update player each frame
     def update(gravity, ticks, holes)
-        self.do_gravity(gravity) #update player's vertical velocity and position
-        @standing = self.on_floor?(gravity, holes)
+        do_gravity(gravity) #update player's vertical velocity and position
+        @standing = on_floor?(gravity, holes)
         @flipping = false if @standing
-        self.do_rotate(gravity) #calculate player's rotation while in midair
-        self.do_running(ticks) #update player's current running animation frame
+        do_rotate(gravity) #calculate player's rotation while in midair
+        do_running(ticks) #update player's current running animation frame
 
         #player dies if outside ship (fell through hole)
         @dead = true if @y_coord-(PLAYER_SIZE/2) < CEILING_Y - 60

@@ -22,9 +22,9 @@ class Obstacle < Entity
 
     #update obstacle each frame
     def update(gravity, holes, ship_speed)
-        self.do_horizontal(ship_speed)
-        self.do_gravity(gravity)
-        self.on_floor?(gravity, holes)
+        do_horizontal(ship_speed)
+        do_gravity(gravity)
+        on_floor?(gravity, holes)
     end
 
     #draw obstacle (crate)

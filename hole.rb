@@ -34,7 +34,7 @@ class Hole < Entity
 
     #update hole each frame
     def update(ship_speed)
-        self.do_horizontal(ship_speed)
+        do_horizontal(ship_speed)
     end
 
     #draw ship hole
