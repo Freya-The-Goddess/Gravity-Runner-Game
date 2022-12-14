@@ -14,9 +14,6 @@ require_relative 'entity'
 class Hole < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :direction
-
-    #hole sprite (class instance variable)
-    @tiles = Gosu::Image.load_tiles(HOLE_TILES_PATH, HOLE_WIDTH, HOLE_HEIGHT)
     
     def initialize(x_coord, y_coord, direction)
         @direction = direction
@@ -50,11 +47,13 @@ class Hole < Entity
         self.class.tiles[tile].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
     end
 
-    #spawn ticks randomizer (class instance variable)
-    @rng = RandNormDist.new(HOLE_SPAWN_BASE, HOLE_SPAWN_SD)
+    #class instance variables
+    @tiles = Gosu::Image.load_tiles(HOLE_TILES_PATH, HOLE_WIDTH, HOLE_HEIGHT) #hole sprite
+    @rng = RandNormDist.new(HOLE_SPAWN_BASE, HOLE_SPAWN_SD) #spawn ticks randomizer
 
     #singleton object
     class << self
+        #class instance variable accessors
         attr_accessor :next_spawn
         private attr_accessor :rng
 

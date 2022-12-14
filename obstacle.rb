@@ -14,9 +14,6 @@ require_relative 'entity'
 class Obstacle < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width
-
-    #obstacle sprites array (class instance variable)
-    @tiles = Gosu::Image.load_tiles(OBSTACLE_TILES_PATH, OBSTACLE_SIZE, OBSTACLE_SIZE)
     
     def initialize(x_coord, y_coord, tile_size, type)
         @type = type
@@ -35,11 +32,13 @@ class Obstacle < Entity
         self.class.tiles[@type].draw_rot(@x_coord, @y_coord, z_layer, 0, 0.5, 0.5, 1, 1)
     end
 
-    #spawn ticks randomizer (class instance variable)
-    @rng = RandNormDist.new(OBSTACLE_SPAWN_BASE, OBSTACLE_SPAWN_SD)
+    #class instance variables
+    @tiles = Gosu::Image.load_tiles(OBSTACLE_TILES_PATH, OBSTACLE_SIZE, OBSTACLE_SIZE) #obstacle sprites array
+    @rng = RandNormDist.new(OBSTACLE_SPAWN_BASE, OBSTACLE_SPAWN_SD) #spawn ticks randomizer
 
     #singleton object
     class << self
+        #class instance variable accessors
         attr_accessor :next_spawn
         private attr_accessor :rng
 
