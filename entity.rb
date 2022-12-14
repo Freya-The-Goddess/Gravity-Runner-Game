@@ -82,7 +82,7 @@ class Entity
 
     #singleton object
     class << self
-        #class instance variable tiles
+        #class instance variable accessors
         public attr_reader :tiles
         private attr_writer :tiles
     end
@@ -96,6 +96,8 @@ class LiveEntity < Entity
     def initialize(x_coord, y_coord, x_vel, tile_size, width)
         @angle, @frame = 0, 0
         @standing, @flipping, @dead = true, false, false
+        @footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
+        @footsteps_channel.pause
         super(x_coord, y_coord, x_vel, tile_size, width)
     end
 
@@ -128,6 +130,25 @@ class LiveEntity < Entity
                 @angle -= 10
             end
         end
+    end
+
+    #play footsteps looping sound effect
+    def play_footsteps_sound
+        if !@footsteps_channel.playing?
+            @footsteps_channel.resume
+        end
+    end
+
+    #pause footsteps sound effect
+    def pause_footsteps_sound
+        if @footsteps_channel.playing?
+            @footsteps_channel.pause
+        end
+    end
+
+    #pause footsteps sound effect
+    def stop_footsteps_sound
+        @footsteps_channel.stop
     end
 
     #draw entity
@@ -163,4 +184,11 @@ class LiveEntity < Entity
 
     #abstract methods to be overriden by children
     abstract_method :update
+
+    #singleton object
+    class << self
+        #class instance variable accessors
+        public attr_reader :footsteps_sound
+        private attr_writer :footsteps_sound
+    end
 end

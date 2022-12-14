@@ -15,13 +15,8 @@ class Player < LiveEntity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :dead, :standing
 
-    #player sprites array (class instance variable)
-    @tiles = Gosu::Image.load_tiles(PLAYER_TILES_PATH, PLAYER_SIZE, PLAYER_SIZE)
-
     def initialize
         super(120, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
-        @footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
-        @footsteps_channel.pause
     end
 
     #reset player to starting values
@@ -76,12 +71,7 @@ class Player < LiveEntity
         end
     end
 
-    #footsteps looping sound effect (class instance variable)
-    @footsteps_sound = Gosu::Sample.new(PLAYER_FOOTSTEP_SOUND_PATH)
-
-    #singleton object
-    class << self
-        public attr_reader :footsteps_sound
-        private attr_writer :footsteps_sound
-    end
+    #class instance variables
+    @tiles = Gosu::Image.load_tiles(PLAYER_TILES_PATH, PLAYER_SIZE, PLAYER_SIZE) #player sprites array
+    @footsteps_sound = Gosu::Sample.new(PLAYER_FOOTSTEP_SOUND_PATH) #footsteps looping sound effect
 end
