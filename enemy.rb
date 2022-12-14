@@ -16,9 +16,6 @@ class Enemy < LiveEntity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width
 
-    #enemy sprites array (class instance variable)
-    @tiles = Gosu::Image.load_tiles(ENEMY_TILES_PATH, ENEMY_SIZE, ENEMY_SIZE)
-
     def initialize(x_coord, y_coord, x_vel, tile_size, width, gravity)
         @gravity = gravity
         super(x_coord, y_coord, x_vel, tile_size, width)
@@ -26,12 +23,19 @@ class Enemy < LiveEntity
     
     #update enemy each frame
     def update(ticks, holes, ship_speed)
-        self.do_horizontal(ship_speed) #update enemy's horizontal position
-        self.do_gravity(@gravity) #update enemy's vertical velocity and position
-        @standing = self.on_floor?(@gravity, holes)
+        do_horizontal(ship_speed) #update enemy's horizontal position
+        do_gravity(@gravity) #update enemy's vertical velocity and position
+        @standing = on_floor?(@gravity, holes)
         @flipping = false if @standing
-        self.do_rotate(@gravity) #calculate enemy's rotation while in midair
-        self.do_running(ticks) if @x_vel != 0 #update enemy's current running animation frame
+        do_rotate(@gravity) #calculate enemy's rotation while in midair
+        do_running(ticks) if @x_vel != 0 #update enemy's current running animation frame
+
+        #play footsteps sound effect while standing, else pause sound
+        if @standing
+            play_footsteps_sound
+        else
+            pause_footsteps_sound
+        end
     end
 
     #draw enemy by calling super function
@@ -39,11 +43,14 @@ class Enemy < LiveEntity
         super(z_layer, @gravity)
     end
 
-    #spawn ticks randomizer (class instance variable)
-    @rng = RandNormDist.new(ENEMY_SPAWN_BASE, ENEMY_SPAWN_SD)
+    #class instance variables
+    @tiles = Gosu::Image.load_tiles(ENEMY_TILES_PATH, ENEMY_SIZE, ENEMY_SIZE) #enemy sprites array
+    @footsteps_sound = Gosu::Sample.new(ENEMY_FOOTSTEP_SOUND_PATH) #footsteps looping sound effect
+    @rng = RandNormDist.new(ENEMY_SPAWN_BASE, ENEMY_SPAWN_SD) #spawn ticks randomizer
 
     #singleton object
     class << self
+        #class instance variable accessors
         attr_accessor :next_spawn
         private attr_accessor :rng
 

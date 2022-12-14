@@ -159,7 +159,10 @@ class GravityRunner < (Gosu::Window)
             @enemies.delete_if do |enemy| #update enemies each frame
                 enemy.update(@ticks, @holes, @ui.ship.speed) #update enemy position and state
                 @player.dead = true if enemy.collision?(@player) #check enemy collision with player
-                true if enemy.off_screen? #remove enemies that are off screen
+                if enemy.off_screen? #remove enemies that are off screen
+                    enemy.stop_footsteps_sound
+                    true
+                end 
             end
 
             @obstacles.delete_if do |obstacle| #update obstacles each frame
@@ -172,14 +175,26 @@ class GravityRunner < (Gosu::Window)
                 hole.update(@ui.ship.speed)
                 true if hole.off_screen? #remove holes that are off screen
             end
+
         elsif @player.dead
+            #pause player and enemy footstep sound effects
             @player.pause_footsteps_sound
+            @enemies.each do |enemy|
+                enemy.pause_footsteps_sound
+            end
+
+            #update highscore if current score higher
             if @score.to_i > @highscore
-                @highscore = @score.to_i #update high score
+                @highscore = @score.to_i
                 @ui.write_highscore(@highscore)
             end
+
         elsif @paused
+            #pause player and enemy footstep sound effects
             @player.pause_footsteps_sound
+            @enemies.each do |enemy|
+                enemy.pause_footsteps_sound
+            end
         end
     end
 
@@ -191,7 +206,7 @@ class GravityRunner < (Gosu::Window)
         @ui.draw_score(ZOrder::UI, @score, @highscore)
         @ui.ship.draw(ZOrder::SHIP)
 
-        #DRAW INSTRUCTIONS OVERLAYS OR DEATH SCREEN OVERLAY
+        #DRAW OVERLAYS
         if @show_instruct && !@player.dead && !@paused #draw instructions on first game
             @show_instruct = @ui.draw_instructions(ZOrder::OVERLAY, @ticks)
         

@@ -38,6 +38,7 @@ OVERLAY_TILES_PATH          = "media/overlay.png"               #overlay tiles f
 JUMP_SOUND_PATH             = "media/jump.mp3"                  #jump sound effect file path
 GRAVITY_SOUND_PATH          = "media/flip-gravity.mp3"          #gravity flip sound effect file path
 PLAYER_FOOTSTEP_SOUND_PATH  = "media/player-footsteps.mp3"      #gravity flip sound effect file path
+ENEMY_FOOTSTEP_SOUND_PATH   = "media/enemy-footsteps.mp3"      #gravity flip sound effect file path
 
 #Screen size parameters
 SCREEN_WIDTH                = 800                               #game window width (pixels)
