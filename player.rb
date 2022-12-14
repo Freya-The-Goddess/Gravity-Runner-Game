@@ -20,6 +20,8 @@ class Player < LiveEntity
 
     def initialize
         super(120, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
+        @footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
+        @footsteps_channel.pause
     end
 
     #reset player to starting values
@@ -46,10 +48,40 @@ class Player < LiveEntity
         #player dies if outside ship (fell through hole)
         @dead = true if @y_coord-(PLAYER_SIZE/2) < CEILING_Y - 60
         @dead = true if @y_coord+(PLAYER_SIZE/2) > FLOOR_Y + 60
+
+        #play footsteps sound effect while standing and alive, else pause sound
+        if @standing && !@dead
+            play_footsteps_sound
+        else
+            pause_footsteps_sound
+        end
     end
 
     #draw player by calling super function
     def draw(z_layer, gravity)
         super(z_layer, gravity)
+    end
+
+    #play footsteps looping sound effect
+    def play_footsteps_sound
+        if !@footsteps_channel.playing?
+            @footsteps_channel.resume
+        end
+    end
+
+    #pause footsteps sound effect
+    def pause_footsteps_sound
+        if @footsteps_channel.playing?
+            @footsteps_channel.pause
+        end
+    end
+
+    #footsteps looping sound effect (class instance variable)
+    @footsteps_sound = Gosu::Sample.new(PLAYER_FOOTSTEP_SOUND_PATH)
+
+    #singleton object
+    class << self
+        public attr_reader :footsteps_sound
+        private attr_writer :footsteps_sound
     end
 end
