@@ -8,6 +8,7 @@ require 'gosu'
 
 #import other files
 require_relative 'params'
+require_relative 'ship'
 
 #user interface class for drawing background, buttons, overlays and score
 class UI

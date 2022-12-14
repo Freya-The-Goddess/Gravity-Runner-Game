@@ -9,7 +9,6 @@ require 'gosu'
 #import other files
 require_relative 'params'
 require_relative 'ui'
-require_relative 'ship'
 require_relative 'player'
 require_relative 'enemy'
 require_relative 'obstacle'
