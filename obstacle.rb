@@ -44,11 +44,7 @@ class Obstacle < Entity
 
         #create new obstacle with randomized type
         def summon(gravity)
-            if gravity == Gravity::UP
-                y_coord = CEILING_Y+OBSTACLE_SIZE/2
-            else
-                y_coord = FLOOR_Y-OBSTACLE_SIZE/2
-            end
+            y_coord = gravity == Gravity::UP ? CEILING_Y+OBSTACLE_SIZE/2 : FLOOR_Y-OBSTACLE_SIZE/2
             type = rand(0..3) #select random obstacle sprite
             return Obstacle.new(SCREEN_WIDTH+OBSTACLE_SIZE, y_coord, OBSTACLE_SIZE, type)
         end

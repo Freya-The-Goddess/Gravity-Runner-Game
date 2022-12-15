@@ -60,11 +60,7 @@ class Hole < Entity
         #create new obstacle with randomized type
         def summon(direction = nil)
             direction = [:floor,:ceiling][rand(0..1)] if direction.nil?
-            if direction == :ceiling
-                y_coord = CEILING_Y-10
-            elsif direction == :floor
-                y_coord = FLOOR_Y+10
-            end
+            y_coord = direction == :ceiling ? CEILING_Y-10 : FLOOR_Y+10
             return Hole.new(SCREEN_WIDTH+170, y_coord, direction)
         end
 
