@@ -22,7 +22,7 @@ class Enemy < LiveEntity
     end
     
     #update enemy each frame
-    def update(ticks, holes, ship_speed)
+    def update(ticks, holes, ship_speed, sound_on)
         do_horizontal(ship_speed) #update enemy's horizontal position
         do_gravity(@gravity) #update enemy's vertical velocity and position
         @standing = on_floor?(@gravity, holes)
@@ -31,11 +31,7 @@ class Enemy < LiveEntity
         do_running(ticks) if @x_vel != 0 #update enemy's current running animation frame
 
         #play footsteps sound effect while standing, else pause sound
-        if @standing
-            play_footsteps_sound
-        else
-            pause_footsteps_sound
-        end
+        @standing && sound_on ? play_footsteps_sound : pause_footsteps_sound
     end
 
     #draw enemy by calling super function
@@ -58,11 +54,7 @@ class Enemy < LiveEntity
         def summon(difficulty)
             speed = rand(0.5..1.2) + difficulty/10
             gravity = [Gravity::UP, Gravity::DOWN][rand(0..1)]
-            if gravity == Gravity::UP
-                y_coord = CEILING_Y+ENEMY_SIZE/2
-            else
-                y_coord = FLOOR_Y-ENEMY_SIZE/2
-            end
+            y_coord = gravity == Gravity::UP ? CEILING_Y+ENEMY_SIZE/2 : FLOOR_Y-ENEMY_SIZE/2
             return Enemy.new(SCREEN_WIDTH+ENEMY_SIZE, y_coord, speed, ENEMY_SIZE, ENEMY_WIDTH, gravity)
         end
 

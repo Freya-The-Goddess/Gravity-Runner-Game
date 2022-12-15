@@ -33,7 +33,7 @@ class Player < LiveEntity
     end
 
     #update player each frame
-    def update(gravity, ticks, holes)
+    def update(gravity, ticks, holes, sound_on)
         do_gravity(gravity) #update player's vertical velocity and position
         @standing = on_floor?(gravity, holes)
         @flipping = false if @standing
@@ -44,12 +44,8 @@ class Player < LiveEntity
         @dead = true if @y_coord-(PLAYER_SIZE/2) < CEILING_Y - 60
         @dead = true if @y_coord+(PLAYER_SIZE/2) > FLOOR_Y + 60
 
-        #play footsteps sound effect while standing and alive, else pause sound
-        if @standing && !@dead
-            play_footsteps_sound
-        else
-            pause_footsteps_sound
-        end
+        #play footsteps sound effect while standing, else pause sound
+        @standing && sound_on ? play_footsteps_sound : pause_footsteps_sound
     end
 
     #draw player by calling super function

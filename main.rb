@@ -27,25 +27,28 @@ class GravityRunner < (Gosu::Window)
             @player = Player.new #create player instance
             @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
 
-            @highscore = @ui.read_highscore
+            @sound_on, @music_on = @ui.read_user_prefs #read user preferences from file
+            @highscore = @ui.read_highscore #read highscore from file
+
             @show_instruct = true #show instructions first game
         end
 
+        #reset game values to default
         @ticks = 0 #keeps track of total game ticks
         @difficulty = DIFFICULTY_START
         @score = 0 #score
         @paused = false
-
-        #first spawn events (after which randomizer takes over)
-        Enemy.next_spawn = FIRST_ENEMY
-        Obstacle.next_spawn = FIRST_OBSTACLE
-        Hole.next_spawn = FIRST_HOLE
-
         @gravity = Gravity::DOWN #default gravity down
 
         @player.reset #reset player to starting values
         @ui.reset #reset ui to starting values
 
+        #first spawn events (after which randomizers takes over)
+        Enemy.next_spawn = FIRST_ENEMY
+        Obstacle.next_spawn = FIRST_OBSTACLE
+        Hole.next_spawn = FIRST_HOLE
+
+        #reset entity lists
         @enemies = []
         @obstacles = []
         @holes = []
@@ -83,39 +86,52 @@ class GravityRunner < (Gosu::Window)
             when Gosu::KB_SPACE #jump
                 if !@paused && !@player.dead && @player.standing
                     @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
-                    @ui.play_jump_sound
+                    @ui.play_jump_sound if @sound_on
                 end
+            
             when Gosu::KB_RETURN #flip gravity
                 if !@paused && !@player.dead
                     flip_gravity 
-                    @ui.play_grav_sound
+                    @ui.play_grav_sound if @sound_on
                 end
+            
             when Gosu::KB_R #restart
                 new_game(true) if @player.dead
+            
             when Gosu::KB_ESCAPE #pause
                 if !@player.dead
-                    if @paused
-                        @paused = false
-                    else
-                        @paused = true
-                    end
+                    @paused = @paused ? false : true #swap value
                 end
 
             #mouse / touchscreen inputs
             when Gosu::MsLeft
                 if @player.dead #click anywhere to restart
                     new_game(true)
-                elsif @paused #click anywhere to resume
-                    @paused = false
+
+                elsif @paused 
+                    if mouse_over_area?(0, 50, 100, 140) #sound on/off button
+                        @sound_on = @sound_on ? false : true #swap value
+                        @ui.write_user_prefs(@sound_on, @music_on) #save preferences
+                    
+                    elsif mouse_over_area?(SCREEN_WIDTH-100, 50, SCREEN_WIDTH, 140) #music on/off button
+                        @music_on = @music_on ? false : true #swap value
+                        @ui.write_user_prefs(@sound_on, @music_on) #save preferences
+                    
+                    else #click anywhere to resume
+                        @paused = false
+                    end
+                
                 else
                     if mouse_over_area?(0, SCREEN_HEIGHT-120, 150, SCREEN_HEIGHT) #jump button
                         if @player.standing
                             @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
-                            @ui.play_jump_sound
+                            @ui.play_jump_sound if @sound_on
                         end
+                    
                     elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
                         flip_gravity
-                        @ui.play_grav_sound
+                        @ui.play_grav_sound if @sound_on
+                    
                     elsif mouse_over_area?(SCREEN_WIDTH/2-50, SCREEN_HEIGHT-80, SCREEN_WIDTH/2+50, SCREEN_HEIGHT) #pause button
                         @paused = true
                     end
@@ -153,10 +169,10 @@ class GravityRunner < (Gosu::Window)
             end
 
             #UPDATE PLAYER, ENEMIES, OBSTACLES AND HOLES
-            @player.update(@gravity, @ticks, @holes) #update player position and state each frame
+            @player.update(@gravity, @ticks, @holes, @sound_on) #update player position and state each frame
 
             @enemies.delete_if do |enemy| #update enemies each frame
-                enemy.update(@ticks, @holes, @ui.ship.speed) #update enemy position and state
+                enemy.update(@ticks, @holes, @ui.ship.speed, @sound_on) #update enemy position and state
                 @player.dead = true if enemy.collision?(@player) #check enemy collision with player
                 if enemy.off_screen? #remove enemies that are off screen
                     enemy.stop_footsteps_sound
@@ -213,7 +229,7 @@ class GravityRunner < (Gosu::Window)
             @ui.draw_overlay(ZOrder::OVERLAY, 2)
         
         elsif @paused #pause screen overlay
-            @ui.draw_overlay(ZOrder::OVERLAY, 3)
+            @ui.draw_pause_screen(ZOrder::OVERLAY, @sound_on, @music_on)
         end
 
         #DRAW PLAYER, ENEMIES, OBSTACLES AND HOLES
