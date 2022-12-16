@@ -155,8 +155,13 @@ class UI
     end
 
     #play gravity flip sound effect
-    def play_grav_sound
-        self.class.grav_sound.play
+    def play_gravity_sound
+        self.class.gravity_sound.play
+    end
+    
+    #play game over sound effect
+    def play_game_over_sound
+        self.class.game_over_sound.play
     end
 
     #Gosu font (class instance variable)
@@ -169,11 +174,13 @@ class UI
 
     #sound effects (class instance variable)
     @jump_sound = Gosu::Sample.new(JUMP_SOUND_PATH)
-    @grav_sound = Gosu::Sample.new(GRAVITY_SOUND_PATH)
+    @gravity_sound = Gosu::Sample.new(GRAVITY_SOUND_PATH)
+    @game_over_sound = Gosu::Sample.new(GAME_OVER_SOUND_PATH)
     
     #singleton object
     class << self
-        public attr_reader :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
-        private attr_writer :font, :space, :buttons, :overlays, :jump_sound, :grav_sound
+        #class instance variable accessors
+        public attr_reader :font, :space, :buttons, :overlays, :jump_sound, :gravity_sound, :game_over_sound
+        private attr_writer :font, :space, :buttons, :overlays, :jump_sound, :gravity_sound, :game_over_sound
     end
 end

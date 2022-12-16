@@ -38,6 +38,7 @@ class GravityRunner < (Gosu::Window)
         @difficulty = DIFFICULTY_START
         @score = 0 #score
         @paused = false
+        @game_over = false
         @gravity = Gravity::DOWN #default gravity down
 
         @player.reset #reset player to starting values
@@ -92,7 +93,7 @@ class GravityRunner < (Gosu::Window)
             when Gosu::KB_RETURN #flip gravity
                 if !@paused && !@player.dead
                     flip_gravity 
-                    @ui.play_grav_sound if @sound_on
+                    @ui.play_gravity_sound if @sound_on
                 end
             
             when Gosu::KB_R #restart
@@ -130,7 +131,7 @@ class GravityRunner < (Gosu::Window)
                     
                     elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
                         flip_gravity
-                        @ui.play_grav_sound if @sound_on
+                        @ui.play_gravity_sound if @sound_on
                     
                     elsif mouse_over_area?(SCREEN_WIDTH/2-50, SCREEN_HEIGHT-80, SCREEN_WIDTH/2+50, SCREEN_HEIGHT) #pause button
                         @paused = true
@@ -191,7 +192,10 @@ class GravityRunner < (Gosu::Window)
                 true if hole.off_screen? #remove holes that are off screen
             end
 
-        elsif @player.dead
+        elsif @player.dead && !@game_over
+            @game_over = true #set game_over to true so block only runs once when player dies
+            @ui.play_game_over_sound if @sound_on #play game over sound
+
             #pause player and enemy footstep sound effects
             @player.pause_footsteps_sound
             @enemies.each do |enemy|
