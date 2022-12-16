@@ -26,6 +26,18 @@ class UI
         @ship.reset #reset ship to starting values
     end
 
+    #returns true if mouse is inside button bounding box
+    def mouse_over_button?(mouse_coords, button_coords)
+        if mouse_coords[0] >= button_coords[0] && 
+            mouse_coords[0] <= button_coords[1] && 
+            mouse_coords[1] >= button_coords[2] && 
+            mouse_coords[1] <= button_coords[3]
+                return true
+        else
+            return false
+        end
+    end
+
     #read highscore from file if it exists else create the file
     def read_highscore
         if File.exists?(HIGHSCORE_PATH)
@@ -109,15 +121,25 @@ class UI
         grav_button.draw_rot(  SCREEN_WIDTH,   SCREEN_HEIGHT, z_layer, 0, 1,   1, 1, 1)
     end
 
-    #draw pause screen overlay and sound buttons
-    def draw_pause_screen(z_layer, sound_on, music_on)
-        draw_overlay(z_layer, 3) #draw pause screen overlay
-
+    #draw sound and music on/off buttons
+    def draw_sound_buttons(z_layer, sound_on, music_on)
         sound_button = sound_on ? self.class.buttons[8] : self.class.buttons[9]
         music_button = music_on ? self.class.buttons[10] : self.class.buttons[11]
 
-        sound_button.draw_rot( -20,            20, z_layer, 0, 0, 0, 1, 1)
-        music_button.draw_rot( SCREEN_WIDTH+20, 20, z_layer, 0, 1, 0, 1, 1)
+        sound_button.draw_rot( -30,             10, z_layer, 0, 0, 0, 1, 1)
+        music_button.draw_rot( SCREEN_WIDTH+30, 10, z_layer, 0, 1, 0, 1, 1)
+    end
+
+    #draw pause screen overlay and sound buttons
+    def draw_pause_screen(z_layer, sound_on, music_on)
+        draw_overlay(z_layer, 3) #draw pause screen overlay
+        draw_sound_buttons(z_layer, sound_on, music_on)
+    end
+
+    #draw pause screen overlay and sound buttons
+    def draw_game_over_screen(z_layer, sound_on, music_on)
+        draw_overlay(z_layer, 2) #draw pause screen overlay
+        draw_sound_buttons(z_layer, sound_on, music_on)
     end
 
     #draw score and high score to screen

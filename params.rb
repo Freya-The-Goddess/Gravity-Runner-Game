@@ -42,18 +42,25 @@ GAME_OVER_SOUND_PATH        = "media/game-over.mp3"             #game over sound
 PLAYER_FOOTSTEP_SOUND_PATH  = "media/player-footsteps.mp3"      #player footsteps looping sound effect file path
 ENEMY_FOOTSTEP_SOUND_PATH   = "media/enemy-footsteps.mp3"       #enemy footsteps looping sound effect file path
 
-#Screen size parameters
-SCREEN_WIDTH                = 800                               #game window width (pixels)
-SCREEN_HEIGHT               = 450                               #game window height (pixels)
-
 #Frame rate parameters
 FRAME_RATE                  = 60                                #frames per second
 UPDATE_INTERVAL             = 1.0 / FRAME_RATE * 1000           #ms interval between frames
 
-#Ship parameters
+#Screen size parameters
+SCREEN_WIDTH                = 800                               #game window width (pixels)
+SCREEN_HEIGHT               = 450                               #game window height (pixels)
+
+#Ship coordinate parameters
 FLOOR_Y                     = 300                               #y coord of floor (pixels)
 CEILING_Y                   = 50                                #y coord of ceiling (pixels)
 FLOOR_THICKNESS             = 15                                #floor thickness (pixels)
+
+#Button coordinate parameters [ x_min,              x_max,              y_min,              y_max         ]
+JUMP_BUTTON_COORDS          = [ 0,                  150,                SCREEN_HEIGHT-120,  SCREEN_HEIGHT ]
+GRAVITY_BUTTON_COORDS       = [ SCREEN_WIDTH-150,   SCREEN_WIDTH,       SCREEN_HEIGHT-120,  SCREEN_HEIGHT ]
+PAUSE_BUTTON_COORDS         = [ SCREEN_WIDTH/2-50,  SCREEN_WIDTH/2+50,  SCREEN_HEIGHT-80,   SCREEN_HEIGHT ]
+SOUND_BUTTON_COORDS         = [ 0,                  90,                 50,                 120           ]
+MUSIC_BUTTON_COORDS         = [ SCREEN_WIDTH-80,    SCREEN_WIDTH,       50,                 120           ]
 
 #Difficulty parameters
 DIFFICULTY_START            = 1.0                               #initial difficulty value

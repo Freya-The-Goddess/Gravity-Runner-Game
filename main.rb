@@ -57,18 +57,6 @@ class GravityRunner < (Gosu::Window)
 
     def needs_cursor?; true; end #enables mouse curser and touchscreen input
 
-    #returns true if mouse is within specified bounding box
-    def mouse_over_area?(min_x, min_y, max_x, max_y)
-        if mouse_x >= min_x && 
-            mouse_x <= max_x && 
-            mouse_y >= min_y && 
-            mouse_y <= max_y
-                return true
-        else
-            return false
-        end
-    end
-
     #flip global gravity direction
     def flip_gravity
         @ui.grav_button_ticks = @ticks + BUTTON_PRESS_TICKS
@@ -85,55 +73,58 @@ class GravityRunner < (Gosu::Window)
         case id
             #keyboard inputs
             when Gosu::KB_SPACE #jump
-                if !@paused && !@player.dead && @player.standing
+                if !@paused && !@game_over && @player.standing
                     @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
                     @ui.play_jump_sound if @sound_on
                 end
             
             when Gosu::KB_RETURN #flip gravity
-                if !@paused && !@player.dead
+                if !@paused && !@game_over
                     flip_gravity 
                     @ui.play_gravity_sound if @sound_on
                 end
             
             when Gosu::KB_R #restart
-                new_game(true) if @player.dead
+                new_game(true) if @game_over
             
             when Gosu::KB_ESCAPE #pause
-                if !@player.dead
+                if !@game_over
                     @paused = @paused ? false : true #swap value
                 end
 
             #mouse / touchscreen inputs
             when Gosu::MsLeft
-                if @player.dead #click anywhere to restart
-                    new_game(true)
+                mouse_coords = [mouse_x, mouse_y]
 
-                elsif @paused 
-                    if mouse_over_area?(0, 50, 100, 140) #sound on/off button
+                if @game_over || @paused
+                    if @ui.mouse_over_button?(mouse_coords, SOUND_BUTTON_COORDS) #sound on/off button
                         @sound_on = @sound_on ? false : true #swap value
                         @ui.write_user_prefs(@sound_on, @music_on) #save preferences
                     
-                    elsif mouse_over_area?(SCREEN_WIDTH-100, 50, SCREEN_WIDTH, 140) #music on/off button
+                    elsif @ui.mouse_over_button?(mouse_coords, MUSIC_BUTTON_COORDS) #music on/off button
                         @music_on = @music_on ? false : true #swap value
                         @ui.write_user_prefs(@sound_on, @music_on) #save preferences
                     
-                    else #click anywhere to resume
-                        @paused = false
+                    else 
+                        if @game_over #click anywhere to restart
+                            new_game(true)
+                        elsif @paused #click anywhere to resume
+                            @paused = false
+                        end
                     end
                 
                 else
-                    if mouse_over_area?(0, SCREEN_HEIGHT-120, 150, SCREEN_HEIGHT) #jump button
+                    if @ui.mouse_over_button?(mouse_coords, JUMP_BUTTON_COORDS) #jump button
                         if @player.standing
                             @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
                             @ui.play_jump_sound if @sound_on
                         end
                     
-                    elsif mouse_over_area?(SCREEN_WIDTH-150, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT) #flip gravity button
+                    elsif @ui.mouse_over_button?(mouse_coords, GRAVITY_BUTTON_COORDS) #flip gravity button
                         flip_gravity
                         @ui.play_gravity_sound if @sound_on
                     
-                    elsif mouse_over_area?(SCREEN_WIDTH/2-50, SCREEN_HEIGHT-80, SCREEN_WIDTH/2+50, SCREEN_HEIGHT) #pause button
+                    elsif @ui.mouse_over_button?(mouse_coords, PAUSE_BUTTON_COORDS) #pause button
                         @paused = true
                     end
                 end
@@ -142,7 +133,7 @@ class GravityRunner < (Gosu::Window)
 
     #update game each frame (tick)
     def update
-        if !@player.dead && !@paused
+        if !@player.dead && !@game_over && !@paused
             @ticks += 1 #increment ticks
             @difficulty += DIFFICULTY_INCREASE #increase difficulty
             @score += @ui.ship.speed * SCORE_SCALER #increase score based on ship speed
@@ -193,13 +184,13 @@ class GravityRunner < (Gosu::Window)
             end
 
         elsif @player.dead && !@game_over
-            @game_over = true #set game_over to true so block only runs once when player dies
+            @game_over = true #set game_over true so block only runs once when player dies
             @ui.play_game_over_sound if @sound_on #play game over sound
 
             #pause player and enemy footstep sound effects
             @player.pause_footsteps_sound
             @enemies.each do |enemy|
-                enemy.pause_footsteps_sound
+                enemy.stop_footsteps_sound
             end
 
             #update highscore if current score higher
@@ -226,12 +217,10 @@ class GravityRunner < (Gosu::Window)
         @ui.ship.draw(ZOrder::SHIP)
 
         #DRAW OVERLAYS
-        if @show_instruct && !@player.dead && !@paused #draw instructions on first game
+        if @show_instruct && !@game_over && !@paused #draw instructions on first game
             @show_instruct = @ui.draw_instructions(ZOrder::OVERLAY, @ticks)
-        
-        elsif @player.dead #draw death screen overlay with restart instructions
-            @ui.draw_overlay(ZOrder::OVERLAY, 2)
-        
+        elsif @game_over #draw game over screen overlay
+            @ui.draw_game_over_screen(ZOrder::OVERLAY, @sound_on, @music_on)
         elsif @paused #pause screen overlay
             @ui.draw_pause_screen(ZOrder::OVERLAY, @sound_on, @music_on)
         end
