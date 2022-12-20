@@ -130,18 +130,6 @@ class UI
         music_button.draw_rot( SCREEN_WIDTH+30, 10, z_layer, 0, 1, 0, 1, 1)
     end
 
-    #draw pause screen overlay and sound buttons
-    def draw_pause_screen(z_layer, sound_on, music_on)
-        draw_overlay(z_layer, 3) #draw pause screen overlay
-        draw_sound_buttons(z_layer, sound_on, music_on)
-    end
-
-    #draw pause screen overlay and sound buttons
-    def draw_game_over_screen(z_layer, sound_on, music_on)
-        draw_overlay(z_layer, 2) #draw pause screen overlay
-        draw_sound_buttons(z_layer, sound_on, music_on)
-    end
-
     #draw score and high score to screen
     def draw_score(z_layer, score, high_score)
         #draw score
@@ -161,14 +149,28 @@ class UI
 
     #draw instructions based on game ticks
     def draw_instructions(z_layer, ticks)
-        if ticks > 80 && ticks < 300
-            self.draw_overlay(z_layer, 0) #jump instruction
-        elsif ticks > 350 && ticks < 600
-            self.draw_overlay(z_layer, 1) #flip gravity instruction
-        elsif ticks > 600
+        if ticks > 50 && ticks < 250
+            self.draw_overlay(z_layer, 1) #jump instruction
+        elsif ticks > 300 && ticks < 500
+            self.draw_overlay(z_layer, 2) #flip gravity instruction
+        elsif ticks > 550 && ticks < 750
+            self.draw_overlay(z_layer, 3) #pause instruction
+        elsif ticks > 750
             return false #instructions complete (don't show again)
         end
         return true
+    end
+
+    #draw pause screen overlay and sound buttons
+    def draw_pause_screen(z_layer, sound_on, music_on)
+        draw_overlay(z_layer, 4) #draw pause screen overlay
+        draw_sound_buttons(z_layer, sound_on, music_on)
+    end
+
+    #draw game over screen overlay and sound buttons
+    def draw_game_over_screen(z_layer, sound_on, music_on)
+        draw_overlay(z_layer, 5) #draw pause screen overlay
+        draw_sound_buttons(z_layer, sound_on, music_on)
     end
 
     #play jump sound effect
