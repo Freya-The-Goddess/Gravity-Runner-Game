@@ -23,10 +23,13 @@ class Ship
         @x_shift = 0.0 #stores pixels to shift ship image for current frame
     end
 
+    #accelerate ship horizontally
+    def accelerate
+        @speed += SHIP_ACCELERATION #increase ship speed
+    end
+
     #move ship horizontally
     def move
-        @speed += SHIP_ACCELERATION #increase ship speed
-
         @x_shift += @speed
         if @x_shift >= SCREEN_WIDTH
             @x_shift -= SCREEN_WIDTH

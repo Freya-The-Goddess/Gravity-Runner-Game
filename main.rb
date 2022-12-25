@@ -22,7 +22,7 @@ class GravityRunner < (Gosu::Window)
         new_game(false) #start new game
     end
 
-    def new_game(restart)
+    def new_game(restart = true)
         if !restart #first game
             @player = Player.new #create player instance
             @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
@@ -30,6 +30,7 @@ class GravityRunner < (Gosu::Window)
             @sound_on, @music_on = @ui.read_user_prefs #read user preferences from file
             @highscore = @ui.read_highscore #read highscore from file
 
+            @title_screen = true #show title screen
             @show_instruct = true #show instructions first game
         end
 
@@ -73,22 +74,25 @@ class GravityRunner < (Gosu::Window)
         case id
             #keyboard inputs
             when Gosu::KB_SPACE #jump
-                if !@paused && !@game_over && @player.standing
+                if !@title_screen && !@paused && !@game_over && @player.standing
                     @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
                     @ui.play_jump_sound if @sound_on
+                elsif @title_screen
+                    @title_screen = false
+                    new_game
                 end
             
             when Gosu::KB_RETURN #flip gravity
-                if !@paused && !@game_over
+                if !@title_screen && !@paused && !@game_over
                     flip_gravity 
                     @ui.play_gravity_sound if @sound_on
                 end
             
             when Gosu::KB_R #restart
-                new_game(true) if @game_over
+                new_game if @game_over
             
             when Gosu::KB_ESCAPE #pause
-                if !@game_over
+                if !@title_screen && !@game_over
                     @paused = @paused ? false : true #swap value
                 end
 
@@ -96,7 +100,7 @@ class GravityRunner < (Gosu::Window)
             when Gosu::MsLeft
                 mouse_coords = [mouse_x, mouse_y]
 
-                if @game_over || @paused
+                if @title_screen || @game_over || @paused
                     if @ui.mouse_over_button?(mouse_coords, SOUND_BUTTON_COORDS) #sound on/off button
                         @sound_on = @sound_on ? false : true #swap value
                         @ui.write_user_prefs(@sound_on, @music_on) #save preferences
@@ -105,9 +109,12 @@ class GravityRunner < (Gosu::Window)
                         @music_on = @music_on ? false : true #swap value
                         @ui.write_user_prefs(@sound_on, @music_on) #save preferences
                     
-                    else 
-                        if @game_over #click anywhere to restart
-                            new_game(true)
+                    else
+                        if @title_screen #click anywhere to play
+                            @title_screen = false
+                            new_game
+                        elsif @game_over #click anywhere to restart
+                            new_game
                         elsif @paused #click anywhere to resume
                             @paused = false
                         end
@@ -133,10 +140,11 @@ class GravityRunner < (Gosu::Window)
 
     #update game each frame (tick)
     def update
-        if !@player.dead && !@game_over && !@paused
+        if !@player.dead && !@title_screen && !@paused && !@game_over
             @ticks += 1 #increment ticks
             @difficulty += DIFFICULTY_INCREASE #increase difficulty
             @score += @ui.ship.speed * SCORE_SCALER #increase score based on ship speed
+            @ui.ship.accelerate #accelerate ship
             @ui.ship.move #move ship horizontally
 
             #SUMMON NEW ENEMIES, OBSTACLES AND HOLES
@@ -199,6 +207,20 @@ class GravityRunner < (Gosu::Window)
                 @ui.write_highscore(@highscore)
             end
 
+        elsif @title_screen
+            @ticks += 1 #increment ticks
+            @ui.ship.move #move ship horizontally
+
+            if rand(0..300) == 0 && @player.standing #randomly jump
+                @player.jump(@ticks, @gravity)
+                @ui.play_jump_sound if @sound_on
+            end
+            if rand(0..500) == 0 #randomly flip gravity
+                flip_gravity
+                @ui.play_gravity_sound if @sound_on
+            end
+            @player.update(@gravity, @ticks, @holes, @sound_on) #update player position and state each frame
+
         elsif @paused
             #pause player and enemy footstep sound effects
             @player.pause_footsteps_sound
@@ -212,17 +234,23 @@ class GravityRunner < (Gosu::Window)
     def draw
         #DRAW BACKGROUND, SHIP AND UI
         @ui.draw_background(ZOrder::BACKGROUND, @ticks)
-        @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused)
-        @ui.draw_score(ZOrder::UI, @score, @highscore)
         @ui.ship.draw(ZOrder::SHIP)
+        if !@title_screen
+            @ui.draw_score(ZOrder::UI, @score, @highscore)
+            @ui.draw_buttons(ZOrder::BUTTONS, @ticks, @gravity, @paused)
+        else
+            @ui.draw_score(ZOrder::UI, nil, @highscore)
+        end
 
         #DRAW OVERLAYS
-        if @show_instruct && !@game_over && !@paused #draw instructions on first game
+        if @show_instruct && !@title_screen && !@paused && !@game_over #draw instructions on first game
             @show_instruct = @ui.draw_instructions(ZOrder::OVERLAY, @ticks)
-        elsif @game_over #draw game over screen overlay
-            @ui.draw_game_over_screen(ZOrder::OVERLAY, @sound_on, @music_on)
+        elsif @title_screen #draw title screen overlay
+            @ui.draw_title_screen(ZOrder::OVERLAY, @sound_on, @music_on)
         elsif @paused #pause screen overlay
             @ui.draw_pause_screen(ZOrder::OVERLAY, @sound_on, @music_on)
+        elsif @game_over #draw game over screen overlay
+            @ui.draw_game_over_screen(ZOrder::OVERLAY, @sound_on, @music_on)
         end
 
         #DRAW PLAYER, ENEMIES, OBSTACLES AND HOLES

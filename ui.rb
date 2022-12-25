@@ -133,13 +133,13 @@ class UI
     #draw score and high score to screen
     def draw_score(z_layer, score, high_score)
         #draw score
-        self.class.font.draw_text("Score: #{score.to_i.to_s}", 10, 5, z_layer, 1.0, 1.0, SCORE_TEXT_COLOR)
+        self.class.font.draw_text("Score: #{score.to_i.to_s}", 10, 5, z_layer, 1.0, 1.0, SCORE_TEXT_COLOR) if !score.nil?
         
         #draw high score
         text_color = SCORE_TEXT_COLOR
         text_color = NEW_HIGHSCORE_TEXT_COLOR if score.to_i > high_score #red text when high score beat
 
-        self.class.font.draw_text("High Score: #{high_score.to_s}", SCREEN_WIDTH-145-(high_score.to_s.length*11), 5, z_layer, 1.0, 1.0, text_color)
+        self.class.font.draw_text("High Score: #{high_score.to_s}", SCREEN_WIDTH-145-(high_score.to_s.length*11), 5, z_layer, 1.0, 1.0, text_color) if !high_score.nil?
     end
 
     #draw overlay based on specified index
@@ -159,6 +159,12 @@ class UI
             return false #instructions complete (don't show again)
         end
         return true
+    end
+
+    #draw pause screen overlay and sound buttons
+    def draw_title_screen(z_layer, sound_on, music_on)
+        draw_overlay(z_layer, 0) #draw pause screen overlay
+        draw_sound_buttons(z_layer, sound_on, music_on)
     end
 
     #draw pause screen overlay and sound buttons
