@@ -105,3 +105,6 @@ OBSTACLE_SPAWN_MULT         = 0.9                               #obstacle spawn 
 HOLE_SPAWN_BASE             = 600                               #hole base spawn tick mean
 HOLE_SPAWN_SD               = 100                               #hole spawn tick standard deviation from mean
 HOLE_SPAWN_MULT             = 0.2                               #hole spawn rate multiplier
+
+#ASCII art version of gravity runner logo
+ASCII_LOGO = "    ______                     _  __        \n   / ____/_____ ____ _ _   __ (_)/ /_ __  __\n  / / __ / ___// __ `/| | / // // __// / / /\n / /_/ // /   / /_/ / | |/ // // /_ / /_/ / \n \\____//_/    \\__,_/  |___//_/ \\__/ \\__, /  \n     ____                          /____/   \n    / __ \\ __  __ ____   ____   ___   _____ \n   / /_/ // / / // __ \\ / __ \\ / _ \\ / ___/ \n  / _  _// /_/ // / / // / / //  __// /     \n /_/ |_| \\__,_//_/ /_//_/ /_/ \\___//_/      \n\n      created by Freya-The-Goddess\n"
