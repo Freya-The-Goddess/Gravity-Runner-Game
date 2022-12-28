@@ -41,6 +41,7 @@ GRAVITY_SOUND_PATH          = "media/flip-gravity.mp3"          #gravity flip so
 GAME_OVER_SOUND_PATH        = "media/game-over.mp3"             #game over sound effect file path
 PLAYER_FOOTSTEP_SOUND_PATH  = "media/player-footsteps.mp3"      #player footsteps looping sound effect file path
 ENEMY_FOOTSTEP_SOUND_PATH   = "media/enemy-footsteps.mp3"       #enemy footsteps looping sound effect file path
+OBSTACLE_IMPACT_SOUND_PATH  = "media/obstacle-impact.mp3"       #obstacle impact sound effect file path
 
 #Frame rate parameters
 FRAME_RATE                  = 60                                #frames per second

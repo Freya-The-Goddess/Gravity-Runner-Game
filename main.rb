@@ -182,7 +182,7 @@ class GravityRunner < (Gosu::Window)
             end
 
             @obstacles.delete_if do |obstacle| #update obstacles each frame
-                obstacle.update(@gravity, @holes, @ui.ship.speed) #update obstacle position and state
+                obstacle.update(@gravity, @holes, @ui.ship.speed, @sound_on) #update obstacle position and state
                 @player.dead = true if obstacle.collision?(@player) #check obstacle collision with player
                 true if obstacle.off_screen? #remove obstacles that are off screen
             end
