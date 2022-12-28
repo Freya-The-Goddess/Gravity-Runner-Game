@@ -79,6 +79,7 @@ BUTTON_PRESS_TICKS          = 20                                #time (ticks) af
 #Player parameters
 PLAYER_SIZE                 = 50                                #player height (pixels)
 PLAYER_WIDTH                = 18                                #player width (pixels)
+PLAYER_X_COORD              = 120                               #player x coord
 JUMP_CONSTANT               = -11.0                             #initial velocity of jump (pixels/tick)
 TICKS_PER_RUN_FRAME         = 6                                 #ticks per running animation frame
 

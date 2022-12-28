@@ -16,7 +16,7 @@ class Player < LiveEntity
     attr_accessor :x_coord, :y_coord, :height, :width, :dead, :standing
 
     def initialize
-        super(120, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
+        super(PLAYER_X_COORD, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
     end
 
     #reset player to starting values
