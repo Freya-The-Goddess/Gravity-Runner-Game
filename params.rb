@@ -51,10 +51,16 @@ UPDATE_INTERVAL             = 1.0 / FRAME_RATE * 1000           #ms interval bet
 SCREEN_WIDTH                = 800                               #game window width (pixels)
 SCREEN_HEIGHT               = 450                               #game window height (pixels)
 
-#Ship coordinate parameters
-FLOOR_Y                     = 300                               #y coord of floor (pixels)
-CEILING_Y                   = 50                                #y coord of ceiling (pixels)
-FLOOR_THICKNESS             = 15                                #floor thickness (pixels)
+#Speed parameters
+BACKGROUND_SPEED            = 1.0                               #background stars scrolling speed (pixels/tick)
+
+#Difficulty parameters
+DIFFICULTY_START            = 1.0                               #initial difficulty value
+DIFFICULTY_INCREASE         = 0.0001                            #difficulty increase per tick
+SCORE_SCALER                = 0.005                             #multiplied by ship speed to increase score per tick
+
+#Button parameters
+BUTTON_PRESS_TICKS          = 20                                #time (ticks) after pressed that button stays pressed down
 
 #Button coordinate parameters [ x_min,              x_max,              y_min,              y_max         ]
 JUMP_BUTTON_COORDS          = [ 0,                  150,                SCREEN_HEIGHT-120,  SCREEN_HEIGHT ]
@@ -63,18 +69,16 @@ PAUSE_BUTTON_COORDS         = [ SCREEN_WIDTH/2-50,  SCREEN_WIDTH/2+50,  SCREEN_H
 SOUND_BUTTON_COORDS         = [ 0,                  90,                 50,                 120           ]
 MUSIC_BUTTON_COORDS         = [ SCREEN_WIDTH-80,    SCREEN_WIDTH,       50,                 120           ]
 
-#Difficulty parameters
-DIFFICULTY_START            = 1.0                               #initial difficulty value
-DIFFICULTY_INCREASE         = 0.0001                            #difficulty increase per tick
-SCORE_SCALER                = 0.005                             #multiplied by ship speed to increase score per tick
-
-#Speed parameters
-BACKGROUND_SPEED            = 1.0                               #background stars scrolling speed (pixels/tick)
+#Ship parameters
+FLOOR_Y                     = 300                               #y coord of floor (pixels)
+CEILING_Y                   = 50                                #y coord of ceiling (pixels)
+FLOOR_THICKNESS             = 15                                #floor thickness (pixels)
+SHIP_SECTION_WIDTH          = 200                               #ship section width (pixels)
+SHIP_SECTION_HEIGHT         = 280                               #ship section height (pixels)
 SHIP_START_SPEED            = 2.8                               #initial speed of ship (pixels/tick)
 SHIP_ACCELERATION           = 0.0001                            #ship speed acceleration (pixels/tick²)
-
-#Button parameters
-BUTTON_PRESS_TICKS          = 20                                #time (ticks) after pressed that button stays pressed down
+SHIP_NORMAL_TILES           = 4                                 #amount of normal ship tiles in ship.png
+SHIP_SPECIAL_TILES          = 8                                 #amount of special ship tiles in ship.png
 
 #Player parameters
 PLAYER_SIZE                 = 50                                #player height (pixels)
