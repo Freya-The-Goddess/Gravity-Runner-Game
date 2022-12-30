@@ -16,7 +16,9 @@ class Player < LiveEntity
     attr_accessor :x_coord, :y_coord, :height, :width, :dead, :standing
 
     def initialize
-        super(PLAYER_X_COORD, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH)
+        footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
+        footsteps_channel.pause
+        super(PLAYER_X_COORD, FLOOR_Y-PLAYER_SIZE/2, 0, PLAYER_SIZE, PLAYER_WIDTH, footsteps_channel)
     end
 
     #reset player to starting values

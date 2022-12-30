@@ -18,7 +18,9 @@ class Enemy < LiveEntity
 
     def initialize(x_coord, y_coord, x_vel, tile_size, width, gravity)
         @gravity = gravity
-        super(x_coord, y_coord, x_vel, tile_size, width)
+        footsteps_channel = self.class.footsteps_sound.play_pan(calc_audio_pan(x_coord), calc_audio_volume(x_coord), 1, true) #start footsteps looping sound effect channel
+        footsteps_channel.pause
+        super(x_coord, y_coord, x_vel, tile_size, width, footsteps_channel)
     end
     
     #update enemy each frame
@@ -32,6 +34,8 @@ class Enemy < LiveEntity
 
         #play footsteps sound effect while standing, else pause sound
         @standing && sound_on ? play_footsteps_sound : pause_footsteps_sound
+        @footsteps_channel.pan = calc_audio_pan(@x_coord)
+        @footsteps_channel.volume = calc_audio_volume(@x_coord)
     end
 
     #draw enemy by calling super function

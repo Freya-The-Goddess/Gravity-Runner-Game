@@ -76,6 +76,21 @@ class Entity
         @x_coord -= (ship_speed + @x_vel)
     end
 
+    #calculate audio pan (-0.2 to 0.2) based on x coordinate
+    def calc_audio_pan(x_coord)
+        pan = ((x_coord / SCREEN_WIDTH / 2) - 0.25) #calculate pan
+        pan = (pan * 10).to_i.to_f / 10 #round down (by absolute value)
+        return pan
+    end
+
+    #calculate audio volume (0.75 to 1) based on x coordinate
+    def calc_audio_volume(x_coord)
+        x_invert = x_coord < SCREEN_WIDTH ? SCREEN_WIDTH - x_coord : SCREEN_WIDTH #invert x coordinate
+        vol = (x_invert / SCREEN_WIDTH / 4) + 0.75
+        vol = 1.0 if vol > 1 #cap volume at 1.0
+        return vol
+    end
+
     #abstract methods to be overriden by children
     abstract_method :update
     abstract_method :draw
@@ -93,11 +108,10 @@ class LiveEntity < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width, :dead, :standing
 
-    def initialize(x_coord, y_coord, x_vel, tile_size, width)
+    def initialize(x_coord, y_coord, x_vel, tile_size, width, footsteps_channel)
         @angle, @frame = 0, 0
         @standing, @flipping, @dead = true, false, false
-        @footsteps_channel = self.class.footsteps_sound.play(1, 1, true) #start footsteps looping sound effect channel
-        @footsteps_channel.pause
+        @footsteps_channel = footsteps_channel
         super(x_coord, y_coord, x_vel, tile_size, width)
     end
 

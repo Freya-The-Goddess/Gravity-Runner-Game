@@ -36,7 +36,7 @@ class Obstacle < Entity
 
     #play impact sound effect
     def play_impact_sound
-        self.class.impact_sound.play
+        self.class.impact_sound.play_pan(calc_audio_pan(@x_coord), calc_audio_volume(@x_coord), 1, false)
     end
 
     #class instance variables
