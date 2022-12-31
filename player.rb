@@ -43,8 +43,8 @@ class Player < LiveEntity
         do_running(ticks) #update player's current running animation frame
 
         #player dies if outside ship (fell through hole)
-        @dead = true if @y_coord-(PLAYER_SIZE/2) < CEILING_Y - 60
-        @dead = true if @y_coord+(PLAYER_SIZE/2) > FLOOR_Y + 60
+        @dead = true if @y_coord-(PLAYER_SIZE/2) < CEILING_Y - DEATH_DISTANCE
+        @dead = true if @y_coord+(PLAYER_SIZE/2) > FLOOR_Y + DEATH_DISTANCE
 
         #play footsteps sound effect while standing, else pause sound
         @standing && sound_on ? play_footsteps_sound : pause_footsteps_sound
