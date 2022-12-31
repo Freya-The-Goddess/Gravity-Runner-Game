@@ -61,6 +61,7 @@ SCORE_SCALER                = 0.005                             #multiplied by s
 
 #Button parameters
 BUTTON_PRESS_TICKS          = 20                                #time (ticks) after pressed that button stays pressed down
+BUTTON_SIZE                 = 150                               #button tile size (pixels)
 
 #Button coordinate parameters [ x_min,              x_max,              y_min,              y_max         ]
 JUMP_BUTTON_COORDS          = [ 0,                  150,                SCREEN_HEIGHT-120,  SCREEN_HEIGHT ]
@@ -73,6 +74,7 @@ MUSIC_BUTTON_COORDS         = [ SCREEN_WIDTH-80,    SCREEN_WIDTH,       50,     
 FLOOR_Y                     = 300                               #y coord of floor (pixels)
 CEILING_Y                   = 50                                #y coord of ceiling (pixels)
 FLOOR_THICKNESS             = 15                                #floor thickness (pixels)
+DEATH_DISTANCE              = 80                                #distance (pixels) below floor that player dies
 SHIP_SECTION_WIDTH          = 200                               #ship section width (pixels)
 SHIP_SECTION_HEIGHT         = 280                               #ship section height (pixels)
 SHIP_START_SPEED            = 2.8                               #initial speed of ship (pixels/tick)
@@ -92,14 +94,17 @@ ENEMY_SIZE                  = 50                                #enemy height (p
 ENEMY_WIDTH                 = 18                                #enemy width (pixels)
 OBSTACLE_SIZE               = 25                                #obstacle width and height (pixels)
 HOLE_HEIGHT                 = 20                                #hole height (pixels)
-HOLE_WIDTH                  = 170                               #hole width (pixels)
-HOLE_COLLIDE_WIDTH          = HOLE_WIDTH - 20                   #hole collision box width (pixels)
-BUTTON_SIZE                 = 150                               #button size
+HOLE_BASE_WIDTH             = 50                                #hole base width (pixels)
+HOLE_SIDES_WIDTH            = 20                                #hole sides width (pixels)
+HOLE_SIZE_MEAN              = 3                                 #hole size multiplier mean
+HOLE_SIZE_SD                = 0.75                              #hole size multiplier standard deviation 
+HOLE_SIZE_MAX               = 5                                 #hole size multiplier maximum (int)
 
-#First spawn event ticks
+#First spawns parameters
 FIRST_ENEMY                 = 600                               #first enemy spawn ticks
 FIRST_OBSTACLE              = 20                                #first obstacle spawn ticks
 FIRST_HOLE                  = 200                               #first hole spawn ticks
+FIRST_HOLE_SIZE             = 3                                 #first hole size multiplier (int)
 
 #Randomizer normal distribution parameters
 ENEMY_SPAWN_BASE            = 600                               #enemy base spawn tick mean (decreases ovet time)

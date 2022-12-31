@@ -162,9 +162,9 @@ class GravityRunner < (Gosu::Window)
 
             if Hole.next_spawn <= @ticks #summon hole when next spawn ticks reached
                 if Hole.next_spawn == FIRST_HOLE 
-                    @holes << Hole.summon(:floor) #create first hole on floor
+                    @holes << Hole.summon(:floor, FIRST_HOLE_SIZE) #create first hole on floor with defined size
                 else 
-                    @holes << Hole.summon #create hole with random direction
+                    @holes << Hole.summon #create hole with random direction and size
                 end
                 Hole.calc_next_spawn(@ticks, @difficulty) #calculate random ticks before next spawn event
             end
@@ -189,6 +189,7 @@ class GravityRunner < (Gosu::Window)
 
             @holes.delete_if do |hole| #update holes each frame
                 hole.update(@ui.ship.speed)
+                @player.dead = true if hole.side_collision?(@player) #check hole side collision with player
                 true if hole.off_screen? #remove holes that are off screen
             end
 
