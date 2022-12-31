@@ -21,8 +21,13 @@ class RandNormDist
         return @mean + scale * Math.cos(theta)
     end
 
-    #generate random value, convert to int and take absolute value
+    #generate random value, round to int
+    def rand_i
+        return rand.round
+    end
+
+    #generate random value, round to int and take absolute value
     def rand_ticks
-        return rand.to_i.abs
+        return rand_i.abs
     end
 end
