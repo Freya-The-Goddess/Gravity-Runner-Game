@@ -20,20 +20,22 @@ class GravityRunner < (Gosu::Window)
         print ASCII_LOGO
         super(SCREEN_WIDTH, SCREEN_HEIGHT, false, UPDATE_INTERVAL) #call parent init to create game window
         self.caption = "Gravity Runner"
-        new_game(false) #start new game
+        new_game(true) #start new game
     end
 
-    def new_game(restart = true)
-        if !restart #first game
+    def new_game(first_game = false, title = false)
+        if first_game #first game
             @player = Player.new #create player instance
             @ui = UI.new #create UI instance (draws ship, background, buttons and overlays)
 
             @sound_on, @music_on = @ui.read_user_prefs #read user preferences from file
             @highscore = @ui.read_highscore #read highscore from file
 
-            @title_screen = true #show title screen
+            title = true #show title screen on first game
             @show_instruct = true #show instructions first game
         end
+
+        @title_screen = title #show title screen
 
         #reset game values to default
         @ticks = 0 #keeps track of total game ticks
@@ -74,12 +76,11 @@ class GravityRunner < (Gosu::Window)
     def button_down(id)
         case id
             #keyboard inputs
-            when Gosu::KB_SPACE #jump
+            when Gosu::KB_SPACE #jump (or start game)
                 if !@title_screen && !@paused && !@game_over && @player.standing
                     @ui.jump_button_ticks = @player.jump(@ticks, @gravity)
                     @ui.play_jump_sound if @sound_on
-                elsif @title_screen
-                    @title_screen = false
+                elsif @title_screen #start game from title screen
                     new_game
                 end
             
@@ -92,9 +93,11 @@ class GravityRunner < (Gosu::Window)
             when Gosu::KB_R #restart
                 new_game if @game_over
             
-            when Gosu::KB_ESCAPE #pause
+            when Gosu::KB_ESCAPE #pause (or back to title screen)
                 if !@title_screen && !@game_over
                     @paused = @paused ? false : true #swap value
+                elsif @game_over
+                    new_game(false, true) #title screen
                 end
 
             #mouse / touchscreen inputs
