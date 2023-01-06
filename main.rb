@@ -159,13 +159,17 @@ class GravityRunner < (Gosu::Window)
             end
 
             if Obstacle.next_spawn <= @ticks #summon obstacle when next spawn ticks reached
-                @obstacles << Obstacle.summon(@gravity) #create new obstacle
+                if Obstacle.next_spawn == FIRST_OBSTACLE
+                    @obstacles << Obstacle.summon(@gravity, FIRST_OBSTACLE_TYPE) #create first obstacle
+                else
+                    @obstacles << Obstacle.summon(@gravity) #create new obstacle
+                end
                 Obstacle.calc_next_spawn(@ticks, @difficulty) #calculate random ticks before next spawn event
             end
 
             if Hole.next_spawn <= @ticks #summon hole when next spawn ticks reached
-                if Hole.next_spawn == FIRST_HOLE 
-                    @holes << Hole.summon(:floor, FIRST_HOLE_SIZE) #create first hole on floor with defined size
+                if Hole.next_spawn == FIRST_HOLE
+                    @holes << Hole.summon(FIRST_HOLE_DIRECTION, FIRST_HOLE_SIZE) #create first hole on floor with defined size
                 else 
                     @holes << Hole.summon #create hole with random direction and size
                 end

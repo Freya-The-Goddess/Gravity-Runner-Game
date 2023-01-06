@@ -15,9 +15,9 @@ class Obstacle < Entity
     #public attributes
     attr_accessor :x_coord, :y_coord, :height, :width
     
-    def initialize(x_coord, y_coord, tile_size, type, static)
+    def initialize(x_coord, y_coord, tile_size, width, type, static)
         @type, @static = type, static
-        super(x_coord, y_coord, 0, tile_size, tile_size)
+        super(x_coord, y_coord, 0, tile_size, width)
     end
 
     #update obstacle each frame
@@ -40,9 +40,12 @@ class Obstacle < Entity
     end
 
     #class instance variables
-    @tiles = Gosu::Image.load_tiles(OBSTACLE_TILES_PATH, OBSTACLE_SIZE, OBSTACLE_SIZE) #obstacle sprites array
     @impact_sound = Gosu::Sample.new(OBSTACLE_IMPACT_SOUND_PATH) #footsteps looping sound effect
     @rng = RandNormDist.new(OBSTACLE_SPAWN_BASE, OBSTACLE_SPAWN_SD) #spawn ticks randomizer
+    @tiles = []
+
+    @tiles += Gosu::Image.load_tiles(CRATE_TILES_PATH, OBSTACLE_WIDTH, OBSTACLE_CRATE_HEIGHT) #append crates to tiles array
+    @tiles += Gosu::Image.load_tiles(BARREL_TILES_PATH, OBSTACLE_WIDTH, OBSTACLE_BARREL_HEIGHT) #append barrels to tiles array
 
     #singleton object
     class << self
@@ -53,11 +56,12 @@ class Obstacle < Entity
         private attr_writer :impact_sound
 
         #create new obstacle with randomized type
-        def summon(gravity)
-            y_coord = gravity == Gravity::UP ? CEILING_Y+OBSTACLE_SIZE/2 : FLOOR_Y-OBSTACLE_SIZE/2
+        def summon(gravity, type = nil)
+            type = rand(0...OBSTACLE_CRATE_VARIATIONS+OBSTACLE_BARREL_VARIATIONS) if type.nil? #select random obstacle sprite
+            height = type < OBSTACLE_CRATE_VARIATIONS ? OBSTACLE_CRATE_HEIGHT : OBSTACLE_BARREL_HEIGHT
+            y_coord = gravity == Gravity::UP ? CEILING_Y+height/2 : FLOOR_Y-height/2
             static = gravity == Gravity::UP ? :ceiling : :floor
-            type = rand(0..3) #select random obstacle sprite
-            return Obstacle.new(SCREEN_WIDTH+OBSTACLE_SIZE, y_coord, OBSTACLE_SIZE, type, static)
+            return Obstacle.new(SCREEN_WIDTH+OBSTACLE_WIDTH, y_coord, height, OBSTACLE_WIDTH, type, static)
         end
 
         #calculate ticks for next spawn event based on normal distribution

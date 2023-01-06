@@ -27,10 +27,11 @@ BLEND                       = Gosu::Color.argb(0xFF_FFFFFF)     #Gosu blend mode
 #Game media file paths
 FONT_PATH                   = "./media/courier-new-bold.ttf"    #courier new bold font path
 HIGHSCORE_PATH              = "media/highscore.txt"             #highscore text file path
-USER_PREFS_PATH             = "media/user-prefs.txt"             #highscore text file path
+USER_PREFS_PATH             = "media/user-prefs.txt"            #user preferences file path
 PLAYER_TILES_PATH           = "media/player.png"                #player sprites file path
 ENEMY_TILES_PATH            = "media/robot.png"                 #enemy sprites file path
-OBSTACLE_TILES_PATH         = "media/crates.png"                #obstacle sprites file path
+CRATE_TILES_PATH            = "media/crates.png"                #crate obstacle sprites file path
+BARREL_TILES_PATH           = "media/barrels.png"                #crate obstacle sprites file path
 HOLE_TILES_PATH             = "media/hole.png"                  #hole sprite file path
 SHIP_IMAGE_PATH             = "media/ship.png"                  #ship image file path
 SPACE_IMAGE_PATH            = "media/space.png"                 #space image file path
@@ -89,33 +90,39 @@ PLAYER_X_COORD              = 120                               #player x coord
 JUMP_CONSTANT               = -11.0                             #initial velocity of jump (pixels/tick)
 TICKS_PER_RUN_FRAME         = 6                                 #ticks per running animation frame
 
-#Entity size parameters
+#Enemy parameters
 ENEMY_SIZE                  = 50                                #enemy height (pixels)
 ENEMY_WIDTH                 = 18                                #enemy width (pixels)
-OBSTACLE_SIZE               = 25                                #obstacle width and height (pixels)
+ENEMY_SPAWN_BASE            = 600                               #enemy base spawn tick mean (decreases ovet time)
+ENEMY_SPAWN_SD              = 50                                #enemy spawn tick standard deviation from mean
+ENEMY_SPAWN_MULT            = 0.8                               #enemy spawn rate multiplier (changes rate of mean decreasing)
+FIRST_ENEMY                 = 600                               #first enemy spawn ticks
+
+#Obstacle parameters
+OBSTACLE_WIDTH              = 25                                #obstacle (crate and barrel) width (pixels)
+OBSTACLE_CRATE_HEIGHT       = 25                                #crate obstacle height (pixels)
+OBSTACLE_BARREL_HEIGHT      = 30                                #barrel obstacle height (pixels)
+OBSTACLE_CRATE_VARIATIONS   = 10                                #crate obctacle types (int)
+OBSTACLE_BARREL_VARIATIONS  = 8                                 #barrel obstacle types (int)
+OBSTACLE_SPAWN_BASE         = 300                               #obstacle base spawn tick mean
+OBSTACLE_SPAWN_SD           = 30                                #obstacle spawn tick standard deviation from mean
+OBSTACLE_SPAWN_MULT         = 0.9                               #obstacle spawn rate multiplier
+FIRST_OBSTACLE              = 20                                #first obstacle spawn ticks
+FIRST_OBSTACLE_TYPE         = 1                                 #first obstacle type (int)
+
+#Hole parameters
 HOLE_HEIGHT                 = 20                                #hole height (pixels)
 HOLE_BASE_WIDTH             = 50                                #hole base width (pixels)
 HOLE_SIDES_WIDTH            = 20                                #hole sides width (pixels)
 HOLE_SIZE_MEAN              = 3                                 #hole size multiplier mean
 HOLE_SIZE_SD                = 0.75                              #hole size multiplier standard deviation 
 HOLE_SIZE_MAX               = 5                                 #hole size multiplier maximum (int)
-
-#First spawns parameters
-FIRST_ENEMY                 = 600                               #first enemy spawn ticks
-FIRST_OBSTACLE              = 20                                #first obstacle spawn ticks
-FIRST_HOLE                  = 200                               #first hole spawn ticks
-FIRST_HOLE_SIZE             = 3                                 #first hole size multiplier (int)
-
-#Randomizer normal distribution parameters
-ENEMY_SPAWN_BASE            = 600                               #enemy base spawn tick mean (decreases ovet time)
-ENEMY_SPAWN_SD              = 50                                #enemy spawn tick standard deviation from mean
-ENEMY_SPAWN_MULT            = 0.8                               #enemy spawn rate multiplier (changes rate of mean decreasing)
-OBSTACLE_SPAWN_BASE         = 300                               #obstacle base spawn tick mean
-OBSTACLE_SPAWN_SD           = 30                                #obstacle spawn tick standard deviation from mean
-OBSTACLE_SPAWN_MULT         = 0.9                               #obstacle spawn rate multiplier
 HOLE_SPAWN_BASE             = 600                               #hole base spawn tick mean
 HOLE_SPAWN_SD               = 100                               #hole spawn tick standard deviation from mean
 HOLE_SPAWN_MULT             = 0.2                               #hole spawn rate multiplier
+FIRST_HOLE                  = 200                               #first hole spawn ticks
+FIRST_HOLE_SIZE             = 3                                 #first hole size multiplier (int)
+FIRST_HOLE_DIRECTION        = :floor                            #first hole direction (:floor or :ceiling)
 
 #ASCII art version of gravity runner logo
 ASCII_LOGO = "    ______                     _  __        \n   / ____/_____ ____ _ _   __ (_)/ /_ __  __\n  / / __ / ___// __ `/| | / // // __// / / /\n / /_/ // /   / /_/ / | |/ // // /_ / /_/ / \n \\____//_/    \\__,_/  |___//_/ \\__/ \\__, /  \n     ____                          /____/   \n    / __ \\ __  __ ____   ____   ___   _____ \n   / /_/ // / / // __ \\ / __ \\ / _ \\ / ___/ \n  / _  _// /_/ // / / // / / //  __// /     \n /_/ |_| \\__,_//_/ /_//_/ /_/ \\___//_/      \n\n      created by Freya-The-Goddess\n"
