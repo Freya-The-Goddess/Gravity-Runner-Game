@@ -80,8 +80,8 @@ SHIP_SECTION_WIDTH          = 200                               #ship section wi
 SHIP_SECTION_HEIGHT         = 280                               #ship section height (pixels)
 SHIP_START_SPEED            = 2.8                               #initial speed of ship (pixels/tick)
 SHIP_ACCELERATION           = 0.0001                            #ship speed acceleration (pixels/tick²)
-SHIP_NORMAL_TILES           = 4                                 #amount of normal ship tiles in ship.png
-SHIP_SPECIAL_TILES          = 8                                 #amount of special ship tiles in ship.png
+SHIP_NORMAL_TILES           = 8                                 #amount of normal ship tiles in ship.png
+SHIP_SPECIAL_TILES          = 12                                #amount of special ship tiles in ship.png
 
 #Player parameters
 PLAYER_SIZE                 = 50                                #player height (pixels)

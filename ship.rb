@@ -27,7 +27,6 @@ class Ship
         for section in @sections
             section.reset
         end
-        ShipSection.next_type = 0
     end
 
     #accelerate ship horizontally
@@ -59,7 +58,7 @@ class ShipSection
 
     #reset type to randomized normal tile
     def reset
-        @type = rand(0..2) > 0 ? 0 : rand(1...SHIP_NORMAL_TILES)
+        @type = self.class.rand_type
     end
 
     #move ship section horizontally
@@ -84,21 +83,30 @@ class ShipSection
 
     #ship sprites (class instance variable)
     @tiles = Gosu::Image.load_tiles(SHIP_IMAGE_PATH, SHIP_SECTION_WIDTH + 2, SHIP_SECTION_HEIGHT)
+    @next_type = 0
+    @next_special_type = SHIP_NORMAL_TILES
 
     #singleton object
     class << self
-        public attr_accessor :next_type
+        public attr_accessor :next_type, :next_special_type
         public attr_reader :tiles
         private attr_writer :tiles
 
         #generate ship section type
         def rand_type
-            if rand(0..9) < 6 #60% chance of normal tile
-                type = rand(0..2) > 0 ? 0 : rand(1...SHIP_NORMAL_TILES)
-            else #40% chance of special tile
-                type = @next_type
-                @next_type += rand(2..4)
-                @next_type -= SHIP_SPECIAL_TILES if @next_type >= SHIP_NORMAL_TILES + SHIP_SPECIAL_TILES
+            case rand(0...100)
+                when 0...35 #35% chance of blank tile
+                    type = 0
+
+                when 35...75 #40% chance of normal tile
+                    type = @next_type
+                    @next_type += rand(2..(SHIP_NORMAL_TILES/2)-1)
+                    @next_type -= SHIP_NORMAL_TILES if @next_type >= SHIP_NORMAL_TILES
+
+                when 75...100 #25% chance of special tile
+                    type = @next_special_type
+                    @next_special_type += rand(2..(SHIP_SPECIAL_TILES/2)-1)
+                    @next_special_type -= SHIP_SPECIAL_TILES if @next_special_type >= SHIP_NORMAL_TILES + SHIP_SPECIAL_TILES
             end
             return type
         end
