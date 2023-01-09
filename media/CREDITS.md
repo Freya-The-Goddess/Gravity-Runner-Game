@@ -1,6 +1,7 @@
 # Assets Credits
 | File Path                                                  | Name              | Author            | Licence                                                   | Source                                                                |
 | ---------------------------------------------------------- | ----------------- |------------------ | --------------------------------------------------------- | --------------------------------------------------------------------- |
+| [/media/barrels.png](/media/barrels.png)                   | Barrels           | Freya-The-Goddess | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |                                                                       |
 | [/media/buttons.png](/media/buttons.png)                   | Buttons           | Freya-The-Goddess | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |                                                                       |
 | [/media/crates.png](/media/crates.png)                     | Crates            | Freya-The-Goddess | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |                                                                       |
 | [/media/hole.png](/media/hole.png)                         | Hole              | Freya-The-Goddess | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |                                                                       |
